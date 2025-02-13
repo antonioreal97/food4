@@ -1,0 +1,6 @@
+# Pastas de build
+backend/bin/
+backend/obj/
+
+## Dependências e pacotes
+packages/
