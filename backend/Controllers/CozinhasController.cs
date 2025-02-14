@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using backend.Models;
+using backend.Data;
 using System;
 
 namespace backend.Controllers
@@ -9,13 +11,30 @@ namespace backend.Controllers
     [ApiController]
     public class CozinhasController : ControllerBase
     {
+        private readonly AppDbContext _context;
+
+        public CozinhasController(AppDbContext context)
+        {
+            _context = context;
+        }
+
         // POST: api/cozinhas/cadastrar
         [HttpPost("cadastrar")]
-        public ActionResult<Cozinha> Cadastrar([FromBody] Cozinha cozinha)
+        public async Task<IActionResult> Cadastrar([FromBody] Cozinha cozinha)
         {
-            // Simulação de cadastro e validação
-            cozinha.Id = 1; // Exemplo
-            cozinha.Aprovada = true; // Após validação do registro do programa social
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            // Realiza validações ou lógica adicional se necessário.
+            // Exemplo: definir que a cozinha é automaticamente aprovada após validação.
+            cozinha.Aprovada = true;
+
+            // Adiciona a cozinha ao contexto e salva as alterações no banco de dados.
+            _context.Cozinhas.Add(cozinha);
+            await _context.SaveChangesAsync();
+
             return Ok(cozinha);
         }
 
@@ -23,7 +42,7 @@ namespace backend.Controllers
         [HttpGet("{id}/produtos")]
         public ActionResult<IEnumerable<Produto>> ProdutosDisponiveis(int id)
         {
-            // Simulação: lista de produtos disponíveis para doação
+            // Simulação: lista de produtos disponíveis para doação.
             var produtos = new List<Produto>
             {
                 new Produto 

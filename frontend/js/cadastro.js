@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
           senha: document.getElementById("senhaEstab").value
         };
         // Enviar dados para o endpoint de cadastro de supermercados
-        fetch('http://localhost:5000/api/supermercados', {
+        fetch('http://localhost:5207/api/supermercados', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', function() {
           senha: document.getElementById("senhaCliente").value
         };
         // Enviar dados para o endpoint de cadastro de cozinhas
-        fetch('http://localhost:5000/api/cozinhas/cadastrar', {
+        fetch('http://localhost:5207/api/cozinhas/cadastrar', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

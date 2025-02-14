@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using backend.Models;
+using backend.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace backend.Controllers
 {
@@ -8,22 +11,19 @@ namespace backend.Controllers
     [ApiController]
     public class SupermercadosController : ControllerBase
     {
+        private readonly AppDbContext _context;
+
+        public SupermercadosController(AppDbContext context)
+        {
+            _context = context;
+        }
+
         // GET: api/supermercados
         [HttpGet]
-        public ActionResult<IEnumerable<Supermercado>> Get()
+        public async Task<ActionResult<IEnumerable<Supermercado>>> Get()
         {
-            // Exemplo: lista estática. Em um cenário real, os dados seriam extraídos do banco.
-            var supermercados = new List<Supermercado>
-            {
-                new Supermercado 
-                { 
-                    Id = 1, 
-                    Nome = "Supermercado Exemplo", 
-                    Endereco = "Rua Exemplo, 123", 
-                    Contato = "(11) 1234-5678" 
-                }
-            };
-
+            // Recupera a lista de supermercados do banco de dados
+            var supermercados = await _context.Supermercados.ToListAsync();
             return Ok(supermercados);
         }
         
