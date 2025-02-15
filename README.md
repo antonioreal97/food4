@@ -78,7 +78,7 @@ projeto/
 ### 🔹 Clonando o Repositório
 ```bash
 git clone https://github.com/antonioreal97/food4.git
-cd projeto
+cd food4
 ```
 
 ### ⚙️ Executando o Backend
