@@ -99,7 +99,7 @@ cd food4
    ```bash
    dotnet run
    ```
-5. A API ficará disponível em [`http://localhost:5000`](http://localhost:5207) (ou outra porta definida). 
+5. A API ficará disponível em [`http://localhost:5207`](http://localhost:5207) (ou outra porta definida). 
 ### 🎨 Executando o Frontend
 1. Abra a pasta `frontend` no seu editor de código.
 2. Utilize uma ferramenta de **Live Server** *(por exemplo, a extensão Live Server do VS Code)* ou abra manualmente o arquivo `index.html` no navegador.
@@ -112,7 +112,7 @@ cd food4
 O backend está configurado para utilizar um esquema de **autenticação fake** para testes. Em produção, será necessário implementar um esquema de autenticação real.
 
 ### 🔄 Atualização dos Dados:
-Os formulários de **cadastro** e **login** do frontend se comunicam com os endpoints do backend utilizando o método `fetch`. Certifique-se de que a URL (`http://localhost:5000/api/...`) esteja correta e que o backend esteja rodando.
+Os formulários de **cadastro** e **login** do frontend se comunicam com os endpoints do backend utilizando o método `fetch`. Certifique-se de que a URL (`http://localhost:5207/api/...`) esteja correta e que o backend esteja rodando.
 
 ### 🗄️ Banco de Dados:
 A string de conexão no `appsettings.json` aponta para o arquivo `./database/appdata.db`. Caso necessário, **crie a pasta `database` manualmente** na pasta `backend` antes de executar as migrations.
