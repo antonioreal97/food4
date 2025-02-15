@@ -12,20 +12,27 @@ Através da plataforma, supermercados podem disponibilizar produtos com desconto
 projeto/
 ├── frontend/
 │   ├── index.html
+│   ├── cadastro.html
 │   ├── login.html
 │   ├── cadastro.html
+│   ├── perfil.html
+│   ├── market.html
 │   ├── css/
 │   │   └── styles.css
 │   ├── js/
 │   │   ├── script.js
+│   │   ├── cadastro.js
 │   │   ├── login.js
+│   │   ├── perfil.js
 │   │   └── cadastro.js
 │   └── images/
 │       └── (coloque suas imagens aqui, por exemplo, logo.png)
 ├── backend/
 │   ├── Authentication/
+│   │   ├── AuthenticationHandler.cs
 │   │   └── FakeAuthenticationHandler.cs
 │   ├── Controllers/
+│   │   ├── AuthController.cs
 │   │   ├── SupermercadosController.cs
 │   │   ├── CozinhasController.cs
 │   │   ├── ProdutosController.cs
@@ -33,6 +40,7 @@ projeto/
 │   ├── Data/
 │   │   └── AppDbContext.cs
 │   ├── Models/
+│   │   ├── Login.cs
 │   │   ├── Produto.cs
 │   │   ├── Cozinha.cs
 │   │   ├── Supermercado.cs
@@ -69,7 +77,7 @@ projeto/
 
 ### 🔹 Clonando o Repositório
 ```bash
-git clone https://seu-repositorio.git
+git clone https://github.com/antonioreal97/food4.git
 cd projeto
 ```
 
@@ -91,8 +99,7 @@ cd projeto
    ```bash
    dotnet run
    ```
-5. A API ficará disponível em [`http://localhost:5000`](http://localhost:5000) (ou outra porta definida). Durante o desenvolvimento, o **Swagger** estará disponível em [`http://localhost:5000/swagger`](http://localhost:5000/swagger) *(se estiver no ambiente de desenvolvimento)*.
-
+5. A API ficará disponível em [`http://localhost:5000`](http://localhost:5207) (ou outra porta definida). 
 ### 🎨 Executando o Frontend
 1. Abra a pasta `frontend` no seu editor de código.
 2. Utilize uma ferramenta de **Live Server** *(por exemplo, a extensão Live Server do VS Code)* ou abra manualmente o arquivo `index.html` no navegador.

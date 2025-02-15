@@ -8,21 +8,31 @@
 </head>
 <body>
   <header>
-    <h1>Login - Food4LL</h1>
+    <div class="header-content container">
+      <h1>Login - Food4LL</h1>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="cadastro.html">Cadastro</a>
+      </nav>
+    </div>
   </header>
 
-  <main>
-    <section>
+  <main class="container">
+    <section class="presentation">
       <h2>Selecione seu tipo de usuário</h2>
       <div class="opcoes-login">
-        <button id="btnEstabelecimento">Estabelecimento (Supermercado)</button>
-        <button id="btnCliente">Cliente (Cozinha)</button>
+        <button class="btn" id="btnEstabelecimento">Estabelecimento (Supermercado)</button>
+        <button class="btn" id="btnCliente">Cliente (Cozinha)</button>
       </div>
     </section>
     <section id="formSection">
-      <!-- O formulário aparecerá aqui conforme a opção escolhida -->
+      <!-- O formulário de login será inserido dinamicamente aqui pelo login.js -->
     </section>
   </main>
+
+  <footer>
+    <p>&copy; 2025 Food4LL. Todos os direitos reservados.</p>
+  </footer>
 
   <script src="js/login.js"></script>
 </body>

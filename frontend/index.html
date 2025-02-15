@@ -8,20 +8,21 @@
 </head>
 <body>
   <header>
-    <h1>Food4LL</h1>
-    <nav>
-      <a href="login.html">Login</a>
-      <a href="cadastro.html">Cadastro</a>
-    </nav>
+    <div class="header-content container">
+      <h1>Food4LL</h1>
+      <nav>
+        <a href="login.html">Login</a>
+        <a href="cadastro.html">Cadastro</a>
+      </nav>
+    </div>
   </header>
 
-  <main>
-    <!-- Seção de apresentação com formatação aprimorada -->
+  <main class="container">
     <section class="presentation">
       <h2>Bem-vindo à Plataforma Food4LL</h2>
       <p>
         Esta aplicação conecta supermercados e cozinhas solidárias, criando uma rede de impacto social, econômico e ambiental.
-        O projeto está alinhado aos Objetivos de Desenvolvimento Sustentável (ODS) da ONU e busca dois grandes propósitos: 
+        O projeto está alinhado aos Objetivos de Desenvolvimento Sustentável (ODS) da ONU e busca dois grandes propósitos:
         Combater o Desperdício de Alimentos e Promover a Segurança Alimentar e Nutricional para Populações Vulneráveis.
       </p>
       <p>
@@ -30,27 +31,24 @@
         Dessa forma, buscamos reduzir o desperdício e fortalecer a solidariedade, transformando excedentes em esperança.
       </p>
     </section>
-    
-    <!-- Seção para exibir os supermercados parceiros -->
+
     <section>
       <h3>Supermercados Parceiros</h3>
       <div id="supermercados-list">
-        <!-- Os dados dos supermercados serão inseridos aqui pelo script.js -->
+        <!-- Os dados dos supermercados serão inseridos dinamicamente pelo script.js -->
       </div>
     </section>
 
-    <!-- Seção de contato -->
     <section>
       <h3>Contato</h3>
       <p>Email: contato@food4ll.com.br</p>
       <p>Telefone: (61) 9999-9999</p>
     </section>
-    
-    <!-- Seção para acesso à conta -->
+
     <section>
       <h3>Acesse sua conta</h3>
-      <button onclick="window.location.href='login.html'">Login</button>
-      <button onclick="window.location.href='cadastro.html'">Cadastro</button>
+      <button class="btn" onclick="window.location.href='login.html'">Login</button>
+      <button class="btn" onclick="window.location.href='cadastro.html'">Cadastro</button>
     </section>
   </main>
 

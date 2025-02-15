@@ -8,21 +8,31 @@
 </head>
 <body>
   <header>
-    <h1>Cadastro - Food4LL</h1>
+    <div class="header-content container">
+      <h1>Cadastro - Food4LL</h1>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="login.html">Login</a>
+      </nav>
+    </div>
   </header>
 
-  <main>
-    <section>
+  <main class="container">
+    <section class="presentation">
       <h2>Selecione seu tipo de usuário para cadastro</h2>
       <div class="opcoes-cadastro">
-        <button id="btnCadEstabelecimento">Estabelecimento (Supermercado)</button>
-        <button id="btnCadCliente">Cliente (Cozinha)</button>
+        <button class="btn" id="btnCadEstabelecimento">Estabelecimento (Supermercado)</button>
+        <button class="btn" id="btnCadCliente">Cliente (Cozinha)</button>
       </div>
     </section>
     <section id="cadastroSection">
-      <!-- O formulário de cadastro aparecerá aqui conforme a opção escolhida -->
+      <!-- O formulário de cadastro será inserido dinamicamente aqui via cadastro.js -->
     </section>
   </main>
+
+  <footer>
+    <p>&copy; 2025 Food4LL. Todos os direitos reservados.</p>
+  </footer>
 
   <script src="js/cadastro.js"></script>
 </body>
