@@ -1,0 +1,305 @@
+/* market.css - Estilos específicos para a página de Market */
+:root {
+    --primary-color: #4CAF50;
+    --secondary-color: #45a049;
+    --dark-color: #333;
+    --light-color: #f5f5f5;
+    --text-color: #333;
+    --white: #fff;
+  }
+
+/* Estrutura Principal */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  /* Header Personalizado */
+  .main-header {
+    background: #4CAF50;
+    color: white;
+    padding: 1rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+  
+  .header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    text-decoration: none;
+    color: white;
+  }
+  
+  .logo img {
+    height: 50px;
+    border-radius: 8px;
+  }
+  
+  .main-nav {
+    display: flex;
+    gap: 25px;
+  }
+  
+  .nav-link {
+    color: white;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: opacity 0.3s;
+  }
+  
+  .nav-link:hover {
+    opacity: 0.8;
+  }
+  
+  /* Grid de Supermercados */
+  .supermarkets-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px;
+    margin-top: 30px;
+  }
+  
+  .supermarket-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease;
+    border: 1px solid #eee;
+  }
+  
+  .supermarket-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  /* Cabeçalho do Card */
+  .market-header {
+    padding: 15px;
+    background: #f8f9fa;
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    border-bottom: 2px solid #eee;
+  }
+  
+  .market-logo {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    border-radius: 8px;
+  }
+  
+  .market-info {
+    flex: 1;
+  }
+  
+  .market-name {
+    margin: 0;
+    color: #2c3e50;
+    font-size: 1.2rem;
+  }
+  
+  .market-details {
+    display: flex;
+    gap: 15px;
+    margin-top: 8px;
+    font-size: 0.9rem;
+    color: #7f8c8d;
+  }
+  
+  /* Lista de Produtos */
+  .products-container {
+    padding: 15px;
+  }
+  
+  .product-list {
+    margin-bottom: 20px;
+  }
+  
+  .product-list-title {
+    color: #2c3e50;
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .donation-products .product-list-title {
+    color: #27ae60;
+  }
+  
+  .badge {
+    background: #27ae60;
+    color: white;
+    padding: 3px 8px;
+    border-radius: 5px;
+    font-size: 0.8rem;
+    margin-left: auto;
+  }
+  
+  .product-items {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .product-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+    font-size: 0.95rem;
+  }
+  
+  .product-name {
+    color: #34495e;
+  }
+  
+  .product-quantity {
+    color: #7f8c8d;
+    font-weight: 500;
+  }
+  
+  /* Footer do Card */
+  .market-footer {
+    padding: 15px;
+    border-top: 1px solid #eee;
+  }
+  
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  
+  .contact-btn {
+    background: #3498db;
+    color: white;
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .contact-btn:hover {
+    background: #2980b9;
+  }
+  
+  /* Estados Especiais */
+.empty-state, .error-state {
+  text-align: center;
+  padding: 4rem;
+  color: #666;
+}
+
+.empty-state i, .error-state i {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+/* Status dos Produtos */
+.product-quantity.doacao {
+  color: var(--secondary-color);
+  font-weight: bold;
+}
+
+.product-quantity.vencido {
+  color: #e74c3c;
+  text-decoration: line-through;
+}
+
+.product-quantity.estoque-baixo {
+  color: #f1c40f;
+}
+
+/* Preview de Produtos */
+.preview-products {
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+/* Efeito de loading */
+@keyframes loading {
+  0% { opacity: 0.5; }
+  50% { opacity: 1; }
+  100% { opacity: 0.5; }
+}
+
+.loading-state {
+  animation: loading 1.5s infinite;
+  text-align: center;
+  padding: 1rem;
+}
+  /* Footer Principal */
+  .main-footer {
+    background: #4CAF50;
+    color: white;
+    padding: 2rem 0;
+    margin-top: 40px;
+  }
+  
+  .footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  
+  .social-links {
+    margin-top: 15px;
+  }
+  
+  .social-links a {
+    color: white;
+    margin: 0 10px;
+    font-size: 1.2rem;
+    transition: opacity 0.3s;
+  }
+  
+  .social-links a:hover {
+    opacity: 0.8;
+  }
+  
+  /* Responsividade */
+  @media (max-width: 768px) {
+    .header-content {
+      flex-direction: column;
+      gap: 15px;
+    }
+    
+    .supermarkets-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .market-details {
+      flex-direction: column;
+      gap: 5px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .product-item {
+      flex-direction: column;
+      gap: 3px;
+    }
+    
+    .product-quantity {
+      font-size: 0.85rem;
+    }
+  }
+  

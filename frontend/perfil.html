@@ -5,64 +5,77 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Perfil - Supermercado</title>
   <link rel="stylesheet" href="css/styles.css">
+  <!-- Caso tenha estilos específicos para o perfil, inclua um arquivo CSS adicional -->
+  <link rel="stylesheet" href="css/perfil.css">
 </head>
 <body>
-  <header>
-    <h1>Perfil do Supermercado</h1>
-    <nav>
-      <a href="market.html">Market</a>
-      <a href="logout.html">Sair</a>
-    </nav>
+  <header class="header">
+    <div class="container header-content">
+      <h1>Perfil do Supermercado</h1>
+      <nav class="nav-menu">
+        <a href="market.html" class="nav-link"><i class="fas fa-shopping-basket"></i> Market</a>
+        <a href="logout.html" class="btn outline">Sair</a>
+      </nav>
+    </div>
   </header>
 
-  <main>
+  <main class="container">
     <!-- Seção para atualizar o endereço de retirada -->
-    <section id="update-pickup">
-      <h2>Atualizar Endereço de Retirada</h2>
-      <form id="pickupForm">
-        <label for="pickupAddress">Endereço de Retirada:</label>
-        <input type="text" id="pickupAddress" name="pickupAddress" required>
-        <button type="submit">Atualizar Endereço</button>
+    <section id="update-pickup" class="auth-card">
+      <h2 class="auth-title">Atualizar Endereço de Retirada</h2>
+      <form id="pickupForm" class="auth-form">
+        <div class="form-group">
+          <label for="pickupAddress">Endereço de Retirada:</label>
+          <input type="text" id="pickupAddress" name="pickupAddress" required>
+        </div>
+        <button class="auth-submit" type="submit">Atualizar Endereço</button>
       </form>
     </section>
 
     <!-- Seção para cadastrar um novo produto -->
-    <section id="product-registration">
-      <h2>Cadastrar Novo Produto</h2>
-      <form id="productForm">
-        <label for="productName">Nome do Produto:</label>
-        <input type="text" id="productName" name="productName" required>
-        <br>
-        <label for="productExpiration">Data de Vencimento:</label>
-        <input type="date" id="productExpiration" name="productExpiration" required>
-        <br>
-        <label for="productDiscount">Desconto (%)</label>
-        <input type="number" id="productDiscount" name="productDiscount" value="0" min="0" max="100">
-        <br>
-        <label for="productPickup">Endereço de Retirada do Produto:</label>
-        <input type="text" id="productPickup" name="productPickup" required>
-        <br>
-        <!-- Checkbox para indicar que o produto é para doação -->
-        <label for="productDonation">
-          <input type="checkbox" id="productDonation" name="productDonation">
-          Produto para Doação
-        </label>
-        <br>
-        <button type="submit">Cadastrar Produto</button>
+    <section id="product-registration" class="auth-card">
+      <h2 class="auth-title">Cadastrar Novo Produto</h2>
+      <form id="productForm" class="auth-form">
+        <div class="form-group">
+          <label for="productName">Nome do Produto:</label>
+          <input type="text" id="productName" name="productName" required>
+        </div>
+        <div class="form-group">
+          <label for="productExpiration">Data de Vencimento:</label>
+          <input type="date" id="productExpiration" name="productExpiration" required>
+        </div>
+        <div class="form-group">
+          <label for="productDiscount">Desconto (%)</label>
+          <input type="number" id="productDiscount" name="productDiscount" value="0" min="0" max="100">
+        </div>
+        <div class="form-group">
+          <label for="productPickup">Endereço de Retirada do Produto:</label>
+          <input type="text" id="productPickup" name="productPickup" required>
+        </div>
+        <div class="form-group">
+          <label for="productDonation">
+            <input type="checkbox" id="productDonation" name="productDonation">
+            Produto para Doação
+          </label>
+        </div>
+        <button class="auth-submit" type="submit">Cadastrar Produto</button>
       </form>
     </section>
 
     <!-- Seção para listar os produtos cadastrados -->
-    <section id="productsList">
-      <h2>Produtos Cadastrados</h2>
+    <section id="productsList" class="auth-card">
+      <h2 class="auth-title">Produtos Cadastrados</h2>
       <div id="productsContainer">
-        <!-- A lista de produtos será inserida aqui pelo perfil.js -->
+        <!-- A lista de produtos será carregada via perfil.js -->
+        <p>Carregando produtos...</p>
       </div>
     </section>
   </main>
 
-  <footer>
-    <p>&copy; 2025 Food4LL. Todos os direitos reservados.</p>
+  <footer class="footer">
+    <div class="container footer-content">
+      <p>&copy; 2025 Food4LL. Todos os direitos reservados.</p>
+    </div>
   </footer>
 
   <script src="js/perfil.js"></script>

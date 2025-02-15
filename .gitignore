@@ -1,6 +1,7 @@
 # Pastas de build
 backend/bin/
 backend/obj/
+.vs/
 
 ## Dependências e pacotes
 packages/

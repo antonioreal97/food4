@@ -1,81 +1,126 @@
 // market.js
 
 document.addEventListener('DOMContentLoaded', () => {
-    const supermarketsContainer = document.getElementById('supermarkets-container');
-  
-    // Função para criar um elemento com as informações do supermercado e um preview de produtos
-    function createSupermarketElement(supermarket) {
-      const container = document.createElement('div');
-      container.classList.add('supermarket');
-  
-      // Exibe o nome do supermercado
-      const header = document.createElement('h3');
-      header.textContent = supermarket.nome;
-      container.appendChild(header);
-  
-      // Exibe o endereço e contato
-      const address = document.createElement('p');
-      address.textContent = `Endereço: ${supermarket.endereco}`;
-      container.appendChild(address);
-  
-      const contact = document.createElement('p');
-      contact.textContent = `Contato: ${supermarket.contato}`;
-      container.appendChild(contact);
-  
-      // Cria um container para o preview dos produtos
-      const productsPreview = document.createElement('div');
-      productsPreview.classList.add('products-preview');
-      productsPreview.textContent = 'Carregando produtos...';
-      container.appendChild(productsPreview);
-  
-      // Realiza uma chamada para o endpoint que retorna os produtos do supermercado (limite a 3 produtos para preview)
-      fetch(`http://localhost:5207/api/produtos/supermercado/${supermarket.id}`)
-        .then(response => response.json())
-        .then(products => {
-          productsPreview.innerHTML = '';
-          // Limita a exibição para até 3 produtos
-          const preview = products.slice(0, 3);
-          if (preview.length === 0) {
-            productsPreview.textContent = 'Nenhum produto disponível';
-          } else {
-            const ul = document.createElement('ul');
-            preview.forEach(product => {
-              const li = document.createElement('li');
-              li.textContent = `${product.nome} - ${product.status}`;
-              ul.appendChild(li);
-            });
-            productsPreview.appendChild(ul);
-          }
-        })
-        .catch(error => {
-          console.error('Erro ao carregar produtos:', error);
-          productsPreview.textContent = 'Erro ao carregar produtos';
-        });
-  
-      return container;
-    }
-  
-    // Função para carregar os supermercados parceiros do backend
-    function loadSupermarkets() {
+  const supermarketsContainer = document.getElementById('supermarkets-container');
+
+  // Função para criar o card do supermercado
+  function createSupermarketCard(supermarket) {
+      const card = document.createElement('article');
+      card.classList.add('supermarket-card');
+
+      // Cabeçalho do card
+      const header = document.createElement('div');
+      header.classList.add('market-header');
+      
+      header.innerHTML = `
+          <img src="images/market-placeholder.jpg" alt="${supermarket.nome}" class="market-logo">
+          <div class="market-info">
+              <h3 class="market-name">${supermarket.nome}</h3>
+              <div class="market-details">
+                  <span class="rating"><i class="fas fa-star"></i> 4.5</span>
+                  <span class="distance"><i class="fas fa-map-marker-alt"></i> ${supermarket.distancia || '2.5km'}</span>
+              </div>
+          </div>
+      `;
+
+      // Corpo do card
+      const body = document.createElement('div');
+      body.classList.add('products-container');
+      
+      // Seção de informações de contato
+      const contactInfo = document.createElement('div');
+      contactInfo.classList.add('product-list');
+      contactInfo.innerHTML = `
+          <p><i class="fas fa-map-marker-alt"></i> ${supermarket.endereco}</p>
+          <p><i class="fas fa-phone"></i> ${supermarket.contato}</p>
+      `;
+
+      // Seção de produtos
+      const productsSection = document.createElement('div');
+      productsSection.classList.add('product-list');
+      productsSection.innerHTML = `
+          <h4 class="product-list-title">
+              <i class="fas fa-box-open"></i>
+              Produtos Disponíveis
+              <span class="badge">${supermarket.totalProdutos || 0} itens</span>
+          </h4>
+          <ul class="product-items preview-products"></ul>
+      `;
+
+      // Footer do card
+      const footer = document.createElement('div');
+      footer.classList.add('market-footer');
+      footer.innerHTML = `
+          <button class="btn btn-primary contact-btn">
+              <i class="fas fa-shopping-cart"></i> Ver Todos os Produtos
+          </button>
+      `;
+
+      // Montagem do card
+      body.appendChild(contactInfo);
+      body.appendChild(productsSection);
+      card.appendChild(header);
+      card.appendChild(body);
+      card.appendChild(footer);
+
+      // Carrega os produtos
+      loadProducts(supermarket.id, productsSection.querySelector('.preview-products'));
+
+      return card;
+  }
+
+  // Função para carregar os produtos
+  function loadProducts(supermarketId, container) {
+      fetch(`http://localhost:5207/api/produtos/supermercado/${supermarketId}`)
+          .then(response => response.json())
+          .then(products => {
+              container.innerHTML = products.slice(0, 3).map(product => `
+                  <li class="product-item">
+                      <span class="product-name">${product.nome}</span>
+                      <span class="product-quantity ${product.status.toLowerCase()}">
+                          ${product.quantidade} unidades
+                      </span>
+                  </li>
+              `).join('');
+          })
+          .catch(error => {
+              console.error('Erro ao carregar produtos:', error);
+              container.innerHTML = '<li>Erro ao carregar produtos</li>';
+          });
+  }
+
+  // Carrega todos os supermercados
+  function loadSupermarkets() {
       fetch('http://localhost:5207/api/supermercados')
-        .then(response => response.json())
-        .then(supermarkets => {
-          if (Array.isArray(supermarkets) && supermarkets.length > 0) {
-            supermarkets.forEach(supermarket => {
-              const element = createSupermarketElement(supermarket);
-              supermarketsContainer.appendChild(element);
-            });
-          } else {
-            supermarketsContainer.textContent = 'Nenhum supermercado parceiro encontrado.';
-          }
-        })
-        .catch(error => {
-          console.error('Erro ao carregar supermercados:', error);
-          supermarketsContainer.textContent = 'Erro ao carregar supermercados.';
-        });
-    }
-  
-    // Chama a função para iniciar o carregamento
-    loadSupermarkets();
-  });
-  
+          .then(response => response.json())
+          .then(supermarkets => {
+              supermarketsContainer.innerHTML = '';
+              if (supermarkets.length > 0) {
+                  supermarkets.forEach(supermarket => {
+                      supermarketsContainer.appendChild(createSupermarketCard(supermarket));
+                  });
+              } else {
+                  supermarketsContainer.innerHTML = `
+                      <div class="empty-state">
+                          <i class="fas fa-store-slash"></i>
+                          <p>Nenhum supermercado encontrado</p>
+                      </div>
+                  `;
+              }
+          })
+          .catch(error => {
+              console.error('Erro ao carregar supermercados:', error);
+              supermarketsContainer.innerHTML = `
+                  <div class="error-state">
+                      <i class="fas fa-exclamation-triangle"></i>
+                      <p>Erro ao carregar dados</p>
+                  </div>
+              `;
+          });
+  }
+
+  // Inicia o carregamento
+  loadSupermarkets();
+
+  // Adicione aqui event listeners para interações
+});

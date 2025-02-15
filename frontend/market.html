@@ -4,31 +4,43 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Food4LL - Market</title>
-  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/market.css">
+  <!-- Adicione ícones (ex: Font Awesome) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-  <header>
-    <h1>Market - Supermercados & Produtos</h1>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="logout.html">Sair</a>
-    </nav>
+  <header class="main-header">
+    <div class="header-content container">
+      <a href="index.html" class="logo">
+        <img src="img/logo.png" alt="Food4LL Logo">
+        <h1>Food4LL Market</h1>
+      </a>
+      <nav class="main-nav">
+        <a href="index.html" class="nav-link"><i class="fas fa-home"></i> Home</a>
+        <a href="logout.html" class="nav-link"><i class="fas fa-sign-out-alt"></i> Sair</a>
+      </nav>
+    </div>
   </header>
 
-  <main>
-    <!-- Seção para exibição dos supermercados parceiros -->
-    <section id="market-content">
-      <h2>Supermercados Parceiros</h2>
+  <main class="container">
+    <section class="supermarkets-section">
+      <h2 class="section-title">Supermercados Parceiros com Produtos Disponíveis</h2>
       <div id="supermarkets-container">
-        <!-- Cada supermercado será exibido aqui com dois sub-blocos:
-             - "Produtos para Doação" (prioritários)
-             - "Outros Produtos" -->
+        <!-- O conteúdo será carregado dinamicamente pelo market.js -->
+        <p>Carregando supermercados...</p>
       </div>
     </section>
   </main>
 
-  <footer>
-    <p>&copy; 2025 Food4LL. Todos os direitos reservados.</p>
+  <footer class="main-footer">
+    <div class="footer-content container">
+      <p>&copy; 2025 Food4LL. Todos os direitos reservados.</p>
+      <div class="social-links">
+        <a href="#"><i class="fab fa-facebook"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+      </div>
+    </div>
   </footer>
 
   <script src="js/market.js"></script>
