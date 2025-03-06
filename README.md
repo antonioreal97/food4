@@ -106,6 +106,14 @@ cd food4
 3. A partir do `index.html`, você poderá navegar para as páginas de **login** e **cadastro**.
 
 ---
+## 📚 Documentação do Projeto
+
+Para conhecer mais detalhes sobre o desenvolvimento e a contextualização do projeto, acesse os documentos abaixo:
+
+- [1 Documentação de Contexto](docs/1Documentacao_de_Contexto.md)
+- [2 Especificações do Projeto](docs/2Especificacoes_do_Projeto.md)
+
+---
 
 ## ℹ️ Observações Importantes
 ### 🔐 Autenticação Fake:

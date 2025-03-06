@@ -1,4 +1,7 @@
 using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Supermercado = backend.Models.Supermercado;
 
 namespace backend.Models
 {
@@ -10,5 +13,8 @@ namespace backend.Models
         public double Desconto { get; set; }
         public string Status { get; set; } = string.Empty;
         public int SupermercadoId { get; set; }
+        [ForeignKey("SupermercadoId")]
+        [Required]
+        public Supermercado? Supermercado { get; set; }
     }
 }
