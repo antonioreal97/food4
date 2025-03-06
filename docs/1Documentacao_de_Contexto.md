@@ -64,3 +64,5 @@ O projeto é direcionado principalmente a:
 - **Cozinhas solidárias e instituições de apoio social:** Que necessitam de fontes alternativas para obter alimentos e, assim, preparar refeições destinadas a comunidades em situação de vulnerabilidade.
 
 Além desses, o sistema pode atrair o interesse de organizações não governamentais, órgãos governamentais e outros agentes envolvidos na promoção da segurança alimentar e sustentabilidade.
+
+<span style="color:red">Especificações: [Especificações do Projeto](2Especificacoes_de_Projeto.md)</span>

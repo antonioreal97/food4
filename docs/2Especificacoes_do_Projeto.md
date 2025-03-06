@@ -1,6 +1,6 @@
 # Especificações do Projeto
 
-<span style="color:red">Pré-requisitos: [Documentação de Contexto](Documentacao_de_Contexto.md)</span>
+<span style="color:red">Pré-requisitos: [Documentação de Contexto](1Documentacao_de_Contexto.md)</span>
 
 Este documento apresenta as especificações do projeto **Plataforma de Redistribuição de Produtos**, definindo a perspectiva do usuário e a ideia de solução para o problema do desperdício de alimentos e da insegurança alimentar. Aqui, são abordados os seguintes tópicos: Personas, Histórias de Usuários, Requisitos Funcionais e Não Funcionais, Restrições e o Diagrama de Casos de Uso. Para a elaboração deste documento, foram utilizadas técnicas como análise de stakeholders, Design Thinking e criação de personas.
 
