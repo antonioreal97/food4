@@ -1,22 +1,44 @@
 # Documentação de Contexto do Projeto: Plataforma de Redistribuição de Produtos
 
 ## Introdução
-A Plataforma de Redistribuição de Produtos é uma aplicação inovadora que conecta supermercados a cozinhas solidárias, estabelecendo uma rede com impacto social, econômico e ambiental. Alinhada aos Objetivos de Desenvolvimento Sustentável (ODS) da ONU, a iniciativa visa combater o desperdício de alimentos e promover a segurança alimentar em comunidades vulneráveis. Essa integração transforma excedentes em oportunidades, criando um ciclo virtuoso de solidariedade e sustentabilidade.
+A **Plataforma de Redistribuição de Produtos** é uma iniciativa inovadora que conecta supermercados a cozinhas solidárias, estabelecendo uma rede com impacto social, econômico e ambiental.  
+Alinhada aos Objetivos de Desenvolvimento Sustentável (ODS) da ONU, a iniciativa visa combater o desperdício de alimentos e promover a segurança alimentar em comunidades vulneráveis.  
+Essa integração transforma excedentes em oportunidades, criando um ciclo virtuoso de solidariedade e sustentabilidade.
 
 ## Problema
-Os supermercados, muitas vezes, geram excedentes de alimentos que não são utilizados e acabam sendo descartados, ocasionando desperdício e impacto ambiental. Por outro lado, diversas comunidades enfrentam insegurança alimentar, sem acesso consistente a refeições nutritivas. A ausência de uma solução integrada que conecte os estabelecimentos que possuem excedentes com as cozinhas solidárias, que podem transformar esses alimentos em refeições, acentua esses desafios, gerando perdas econômicas e sociais.
+No Brasil, aproximadamente **30% dos alimentos produzidos são desperdiçados**, totalizando cerca de **46 milhões de toneladas anuais**.  
+Esse desperdício representa uma perda econômica de **R$ 61,3 bilhões por ano**.  
+[Valor Econômico](https://valor.globo.com/publicacoes/especiais/consumo-consciente/noticia/2024/10/15/brasil-perde-r-613-bilhoes-por-ano-com-desperdicio-de-alimentos.ghtml?utm_source=chatgpt.com)
+
+Enquanto isso, milhões de brasileiros enfrentam **insegurança alimentar**.  
+De acordo com dados do **IBGE de 2023**, **27,6% dos domicílios brasileiros estavam em situação de insegurança alimentar**, sendo que **4,1% enfrentavam insegurança alimentar grave**, afetando cerca de **3,2 milhões de lares**.  
+[IBGE - Agência de Notícias](https://agenciadenoticias.ibge.gov.br/agencia-noticias/2012-agencia-de-noticias/noticias/39838-seguranca-alimentar-nos-domicilios-brasileiros-volta-a-crescer-em-2023?utm_source=chatgpt.com)
+
+A ausência de uma solução integrada que conecte os estabelecimentos com excedentes às cozinhas solidárias, que podem transformar esses alimentos em refeições, **acentua esses desafios, gerando perdas econômicas e sociais**.
 
 ## Objetivos
 ### Objetivo Geral
-Desenvolver um software que possibilite a conexão eficiente entre supermercados e cozinhas solidárias, otimizando a redistribuição de alimentos excedentes e contribuindo para a segurança alimentar das populações vulneráveis.
+Desenvolver uma aplicação interativa que intermedie a conexão eficiente entre supermercados (doadores) e cozinhas solidárias, otimizando a redistribuição de alimentos excedentes e contribuindo para a segurança alimentar e nutricinal das populações vulneráveis.
 
 ### Objetivos Específicos
 - **Facilitar a disponibilização dos alimentos excedentes:** Implementar funcionalidades que permitam aos supermercados registrar e disponibilizar de forma simples e segura os produtos que podem ser redistribuídos.
 - **Otimizar a logística de distribuição:** Criar mecanismos que assegurem que as cozinhas solidárias possam acessar e solicitar os alimentos de maneira eficiente, promovendo uma entrega ágil e segura para os beneficiários.
 
-## Justificativa da Solução
+## Justificativa
 
-Diante dos elevados índices de desperdício de alimentos e da crescente insegurança alimentar em diversas regiões, a criação desta plataforma se apresenta como uma solução inovadora e necessária. Ao promover a conexão entre supermercados e cozinhas solidárias, o projeto não só contribui para a redução do desperdício e dos impactos ambientais, mas também fortalece a rede de apoio social, proporcionando refeições a comunidades que mais necessitam. O alinhamento com os ODS da ONU reforça a importância da iniciativa, demonstrando o compromisso com práticas sustentáveis e inclusivas.
+A implementação da **Plataforma Food For All** se justifica pelos seguintes motivos:
+
+- **Alto desperdício de alimentos no Brasil**, contrastando com o grande número de pessoas em situação de fome.
+- **Falta de soluções tecnológicas eficientes** para conectar doadores e beneficiários de forma estruturada.
+- **Impacto ambiental** significativo causado pelo desperdício de alimentos, que contribui para emissões de carbono e uso excessivo de recursos naturais.
+- **Alinhamento com políticas públicas e ODS da ONU**, promovendo sustentabilidade e responsabilidade social.
+
+Essa iniciativa baseia-se em pesquisas e experiências de projetos similares já implementados em outros países, como a **EatCloud na Colômbia** e a **FAO (Organização das Nações Unidas para a Alimentação e a Agricultura)**, que demonstram a viabilidade e o impacto positivo de plataformas digitais para a redistribuição de alimentos.
+
+[ONU Brasil](https://brasil.un.org/pt-br/87526-fao-lan%C3%A7a-plataforma-para-reduzir-perda-e-desperd%C3%ADcio-de-alimentos)  
+[El País](https://elpais.com/america-colombia/branded/los-lideres-de-colombia/2024-12-05/jorge-correa-el-emprendedor-que-tiende-puentes-tecnologicos-para-erradicar-el-hambre.html?utm_source=chatgpt.com)
+  
+
 
 ## Dados sobre o Desperdício de Alimentos
 
@@ -59,10 +81,30 @@ Esses dados reforçam a relevância da plataforma ao conectar **supermercados e 
 
 
 ## Público-Alvo
-O projeto é direcionado principalmente a:
-- **Supermercados e estabelecimentos alimentícios:** Que buscam uma maneira eficaz de gerenciar e redistribuir os alimentos excedentes, reduzindo perdas e otimizando recursos.
-- **Cozinhas solidárias e instituições de apoio social:** Que necessitam de fontes alternativas para obter alimentos e, assim, preparar refeições destinadas a comunidades em situação de vulnerabilidade.
 
-Além desses, o sistema pode atrair o interesse de organizações não governamentais, órgãos governamentais e outros agentes envolvidos na promoção da segurança alimentar e sustentabilidade.
+O projeto **Food For All** é direcionado principalmente a:
+
+### Supermercados e estabelecimentos alimentícios  
+Esses estabelecimentos enfrentam **perdas significativas de alimentos**.  
+Por exemplo, os supermercados brasileiros **desperdiçaram aproximadamente R$ 3,9 bilhões** em frutas, legumes, verduras e produtos de padaria, peixaria e açougue em 2017.  
+[Agência Brasil](https://agenciabrasil.ebc.com.br/economia/noticia/2018-08/supermercados-desperdicam-r-39-bi-em-alimentos-por-ano-diz-abras?utm_source=chatgpt.com)  
+
+Além disso, cerca de **36% dos alimentos descartados no varejo** são devido à **validade vencida**, indicando a necessidade de **melhor gerenciamento e redistribuição de excedentes**.  
+[ANR Brasil](https://anrbrasil.org.br/36-de-alimentos-descartados-no-varejo-sao-por-conta-de-validade-vencida-segundo-a-abras/?utm_source=chatgpt.com)  
+
+### Cozinhas solidárias e instituições de apoio social  
+No Brasil, existem mais de **2.000 cozinhas solidárias** em funcionamento, fornecendo **refeições gratuitas** a populações em situação de vulnerabilidade e insegurança alimentar.  
+[Portal Gov.br](https://www.gov.br/mds/pt-br/acoes-e-programas/acesso-a-alimentos-e-a-agua/programa-cozinha-solidaria?utm_source=chatgpt.com)  
+
+Essas iniciativas desempenham um papel crucial no **combate à fome** e na **promoção da inclusão social**, necessitando de **fontes alternativas e constantes de alimentos** para manter suas atividades.  
+
+### Outros agentes envolvidos  
+Além desses, o sistema pode atrair o interesse de:  
+- **Organizações não governamentais (ONGs)** focadas na segurança alimentar.  
+- **Órgãos governamentais**, que promovem políticas públicas de combate ao desperdício e à fome.  
+- **Empresas e startups de tecnologia social**, interessadas em desenvolver soluções inovadoras para a redistribuição de alimentos.  
+
+A participação desses atores é fundamental para **fortalecer a rede de apoio** e **ampliar o alcance** das ações de combate ao desperdício de alimentos e à fome no país.  
+
 
 <span style="color:red">Especificações: [Especificações do Projeto](2Especificacoes_do_Projeto.md)</span>

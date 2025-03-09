@@ -34,9 +34,9 @@ A seguir, são descritas cinco personas que representam os principais perfis de 
 - **Expectativas:** Uma plataforma integrada que otimize a comunicação e o agendamento das coletas e entregas dos produtos.  
 - **Aparência:** Jovem e dinâmica, com trajes práticos que demonstram agilidade e engajamento em ações sociais.
 
-### 4. Pedro – Empreendedor Social
+### 4. Pedro – Pesquisador Social
 - **Idade:** 35 anos  
-- **Profissão:** Empreendedor social  
+- **Profissão:** Pesquisador social  
 - **Angústias:** O desperdício de recursos que poderiam ser revertidos em ações de impacto social.  
 - **Frustrações:** Dificuldade em obter dados e métricas que comprovem a eficácia dos programas de doação.  
 - **Expectativas:** Uma ferramenta que forneça relatórios e indicadores de impacto, auxiliando na tomada de decisões estratégicas.  
@@ -59,10 +59,15 @@ Com base nas personas identificadas, foram elaboradas as seguintes histórias de
 | EU COMO... (Persona)                           | QUERO/PRECISO... (Funcionalidade)                                          | PARA... (Motivo/Valor)                                                               |
 |------------------------------------------------|---------------------------------------------------------------------------|--------------------------------------------------------------------------------------|
 | **Carlos (Gerente de Supermercado)**           | Cadastrar e gerenciar os produtos excedentes de forma rápida e intuitiva.  | Otimizar o aproveitamento dos alimentos e reduzir os desperdícios no supermercado.  |
+| **Carlos (Gerente de Supermercado)**           | Receber notificações sobre pedidos de doação e acompanhar o status.       | Melhorar a organização e garantir que os produtos sejam doados dentro do prazo.     |
 | **Ana (Coordenadora de Cozinha Solidária)**    | Consultar e solicitar os produtos disponíveis na plataforma.              | Garantir o acesso a alimentos de qualidade para preparar refeições para os necessitados. |
+| **Ana (Coordenadora de Cozinha Solidária)**    | Avaliar os alimentos recebidos e dar feedback sobre a qualidade das doações. | Melhorar a transparência e incentivar melhores doações por parte dos supermercados.  |
 | **Mariana (Voluntária de Logística)**          | Receber notificações e agendar coletas de produtos doados.                | Melhorar a coordenação e a eficiência na distribuição dos alimentos.                |
-| **Pedro (Empreendedor Social)**                | Acessar relatórios e indicadores de impacto social.                       | Monitorar a eficácia do programa e embasar decisões estratégicas.                    |
+| **Mariana (Voluntária de Logística)**          | Visualizar rotas otimizadas para coleta e entrega dos alimentos.          | Reduzir custos e tempo de transporte, garantindo mais eficiência na logística.       |
+| **Pedro (Pesquisador)**                | Acessar relatórios e indicadores de impacto social.                       | Monitorar a eficácia do programa e embasar decisões estratégicas.                    |
+| **Pedro (Pesquisador)**                | Compartilhar dados e resultados com investidores e parceiros.             | Aumentar o apoio ao projeto e captar mais recursos para sua expansão.               |
 | **Letícia (Administradora da Plataforma)**     | Gerenciar usuários, produtos e transações por meio de um dashboard centralizado. | Assegurar a segurança, transparência e eficiência da operação da plataforma.          |
+| **Letícia (Administradora da Plataforma)**     | Configurar permissões e acessos para diferentes tipos de usuários.        | Garantir que cada usuário tenha acesso apenas às funcionalidades necessárias.        |
 
 ---
 
@@ -76,15 +81,30 @@ Com base nas personas identificadas, foram elaboradas as seguintes histórias de
 | RF-002 | A aplicação deve permitir que cozinhas solidárias consultem os produtos disponíveis e façam solicitações.    | ALTA       |
 | RF-003 | A aplicação deve enviar notificações em tempo real para os usuários sobre novas doações ou atualizações.     | MÉDIA      |
 | RF-004 | A aplicação deve fornecer um dashboard administrativo para o monitoramento de transações e usuários.         | MÉDIA      |
+| RF-005 | A aplicação deve permitir que usuários registrem-se e façam login com autenticação segura.                   | ALTA       |
+| RF-006 | A aplicação deve permitir que supermercados filtrem os pedidos recebidos por status e data.                   | MÉDIA      |
+| RF-007 | A aplicação deve permitir que as cozinhas solidárias avaliem e confirmem as doações recebidas.                | ALTA       |
+| RF-008 | A aplicação deve gerar relatórios sobre as doações realizadas, quantidades de alimentos distribuídos e impacto social. | MÉDIA      |
+| RF-009 | A aplicação deve permitir a integração com serviços de mapas para auxiliar na logística de entrega.           | MÉDIA      |
+| RF-010 | A aplicação deve armazenar um histórico de transações realizadas para fins de auditoria.                      | ALTA       |
+| RF-011 | A aplicação deve permitir que administradores bloqueiem ou excluam contas em caso de uso inadequado.          | MÉDIA      |
+| RF-012 | A aplicação deve garantir que os dados dos usuários e transações estejam protegidos por criptografia.         | ALTA       |
+
 
 ### Requisitos Não Funcionais
 
-| ID      | Descrição do Requisito                                                                            | Prioridade |
-|---------|---------------------------------------------------------------------------------------------------|------------|
-| RNF-001 | A aplicação deve ser responsiva e funcionar corretamente em dispositivos móveis e desktops.       | ALTA       |
-| RNF-002 | A aplicação deve processar requisições dos usuários em no máximo 3 segundos.                      | MÉDIA      |
-| RNF-003 | A aplicação deve garantir a segurança dos dados dos usuários, utilizando criptografia e boas práticas. | ALTA       |
-| RNF-004 | A aplicação deve ser desenvolvida com foco em escalabilidade e facilidade de manutenção.          | MÉDIA      |
+| ID      | Descrição do Requisito                                                                                   | Prioridade |
+|---------|----------------------------------------------------------------------------------------------------------|------------|
+| RNF-001 | A aplicação deve ser responsiva e funcionar corretamente em dispositivos móveis, tablets e desktops.      | ALTA       |
+| RNF-002 | A aplicação deve processar requisições dos usuários em no máximo **3 segundos**, garantindo uma experiência fluida. | MÉDIA      |
+| RNF-003 | A aplicação deve garantir a segurança dos dados dos usuários, utilizando **criptografia de ponta a ponta** e seguindo boas práticas de segurança. | ALTA       |
+| RNF-004 | A aplicação deve ser desenvolvida com foco em **escalabilidade**, permitindo um aumento no número de usuários sem comprometer o desempenho. | MÉDIA      |
+| RNF-005 | A aplicação deve possuir **backup automático periódico** para evitar perda de dados em casos de falha do sistema. | ALTA       |
+| RNF-006 | O sistema deve seguir os princípios de **acessibilidade**, garantindo que usuários com deficiência possam utilizá-lo sem barreiras. | MÉDIA      |
+| RNF-007 | A aplicação deve permitir integração com **APIs externas**, como serviços de mapas e notificações. | MÉDIA      |
+| RNF-008 | O sistema deve seguir boas práticas de **desenvolvimento sustentável**, otimizando consumo de recursos computacionais. | MÉDIA      |
+| RNF-009 | A aplicação deve ser desenvolvida com foco em **usabilidade**, garantindo uma experiência intuitiva e agradável para os usuários. | ALTA       |
+
 
 ---
 
