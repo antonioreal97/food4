@@ -5,6 +5,12 @@ Esta aplicação conecta **supermercados** e **cozinhas solidárias**, criando u
 
 Através da plataforma, supermercados podem disponibilizar produtos com desconto ou para doação, enquanto cozinhas solidárias cadastradas acessam esses alimentos, garantindo refeições de qualidade para comunidades em situação de vulnerabilidade. Dessa forma, reduzimos o desperdício e fortalecemos a solidariedade, transformando excedentes em esperança.
 
+### 🎥 Demonstração (vídeo)
+<video width="640" height="480" controls>
+  <source src="frontend/img/prototipo.mp4" type="video/mp4">
+  Seu navegador não suporta a exibição de vídeos.
+</video>
+
 ---
 
 ## 📂 Estrutura do Projeto
