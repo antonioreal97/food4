@@ -137,24 +137,20 @@ O diagrama de casos de uso ilustra a interação entre os usuários e a platafor
 
 
 ```mermaid
-%% Diagrama de Casos de Uso para a Plataforma
 flowchart TD
-    %% Definindo a fronteira do sistema (Plataforma)
     subgraph Plataforma
         direction TB
         
-        UC1[Cadastro e Gerenciamento de Produtos]
-        UC2[Consulta e Solicitação de Produtos]
-        UC3[Notificações em Tempo Real]
-        UC4[Gestão Administrativa]
+        UC1[📦 Cadastro e Gerenciamento de Produtos]
+        UC2[🔍 Consulta e Solicitação de Produtos]
+        UC3[🔔 Notificações em Tempo Real]
+        UC4[⚙️ Gestão Administrativa]
     end
 
-    %% Atores externos
-    Supermercados[Supermercados] --> UC1
-    Cozinhas[Cozinhas Solidárias] --> UC2
-    Administradores[Administradores] --> UC4
+    Supermercados[🏬 Supermercados] --> UC1
+    Cozinhas[🍽️ Cozinhas Solidárias] --> UC2
+    Administradores[🛡️ Administradores] --> UC4
 
-    %% Notificações em Tempo Real vinculadas a todos os atores
     UC3 -.-> Supermercados
     UC3 -.-> Cozinhas
     UC3 -.-> Administradores
