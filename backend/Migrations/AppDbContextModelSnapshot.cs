@@ -72,6 +72,8 @@ namespace backend.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("SupermercadoId");
+
                     b.ToTable("Produtos");
                 });
 
@@ -124,6 +126,82 @@ namespace backend.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Transacoes");
+                });
+
+            modelBuilder.Entity("backend.Models.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("CozinhaId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("SupermercadoId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UserType")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CozinhaId")
+                        .IsUnique();
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("SupermercadoId")
+                        .IsUnique();
+
+                    b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("backend.Models.Produto", b =>
+                {
+                    b.HasOne("backend.Models.Supermercado", "Supermercado")
+                        .WithMany()
+                        .HasForeignKey("SupermercadoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Supermercado");
+                });
+
+            modelBuilder.Entity("backend.Models.User", b =>
+                {
+                    b.HasOne("backend.Models.Cozinha", "Cozinha")
+                        .WithOne()
+                        .HasForeignKey("backend.Models.User", "CozinhaId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("backend.Models.Supermercado", "Supermercado")
+                        .WithOne()
+                        .HasForeignKey("backend.Models.User", "SupermercadoId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Cozinha");
+
+                    b.Navigation("Supermercado");
                 });
 #pragma warning restore 612, 618
         }

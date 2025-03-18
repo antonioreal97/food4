@@ -1,16 +1,38 @@
 // perfil.js
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Para fins de teste, usamos um ID fixo para o supermercado (exemplo: 1).
-  // Em uma aplicação real, esse ID seria obtido do token de login ou do localStorage.
-  const userId = 1;
+  // Verifica se o usuário está logado
+  const token = localStorage.getItem('token');
+  if (!token) {
+    alert('Você precisa estar logado para acessar esta página.');
+    window.location.href = 'login.html';
+    return;
+  }
+
+  // Obtém dados do usuário do localStorage
+  const userType = localStorage.getItem('userType');
+  const supermercadoId = localStorage.getItem('supermercadoId');
+  
+  // Verifica se o usuário é do tipo correto para esta página
+  if (userType !== 'Supermercado') {
+    alert('Esta página é apenas para supermercados.');
+    window.location.href = 'login.html';
+    return;
+  }
+  
+  // Define o ID do supermercado
+  const userId = supermercadoId;
 
   // Função para carregar e exibir os produtos cadastrados para o supermercado logado
   async function loadProducts() {
     const productsContainer = document.getElementById('productsContainer');
     productsContainer.innerHTML = 'Carregando produtos...';
     try {
-      const response = await fetch(`http://localhost:5207/api/produtos/supermercado/${userId}`);
+      const response = await fetch(`http://localhost:5207/api/produtos/supermercado/${userId}`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
       if (response.ok) {
         const products = await response.json();
         if (Array.isArray(products) && products.length > 0) {
@@ -47,7 +69,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const response = await fetch(`http://localhost:5207/api/supermercados/${userId}`, {
           method: 'PUT',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
           },
           body: JSON.stringify({ pickupAddress: pickupAddress })
         });
@@ -90,7 +113,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const response = await fetch('http://localhost:5207/api/produtos', {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
           },
           body: JSON.stringify(productData)
         });
