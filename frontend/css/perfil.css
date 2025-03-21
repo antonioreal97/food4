@@ -47,6 +47,24 @@
     text-align: center;
   }
   
+  /* Estilos para a seção de informações do perfil */
+  .profile-details {
+    padding: 1rem;
+    background-color: var(--light-color);
+    border-radius: var(--border-radius);
+    margin-bottom: 1rem;
+  }
+  
+  .profile-details p {
+    margin-bottom: 0.8rem;
+    font-size: 1.1rem;
+  }
+  
+  .profile-details strong {
+    color: var(--dark-color);
+    margin-right: 0.5rem;
+  }
+  
   /* =============== FORMULÁRIOS =============== */
   .auth-form {
     max-width: 600px;

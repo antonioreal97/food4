@@ -130,6 +130,52 @@ A string de conexão no `appsettings.json` aponta para o arquivo `./database/app
 
 ---
 
+## 🆕 Funcionalidades Recentes
+
+### 🏬 Perfil do Supermercado
+- Visualização e gerenciamento de informações do supermercado
+- Cadastro de produtos com descontos ou para doação
+- Definição de endereço padrão para retirada de produtos
+- Visualização dos produtos cadastrados
+
+### 📦 Gestão de Produtos
+- Cadastro de produtos com data de vencimento e descontos
+- Upload de imagens dos produtos
+- Definição de endereços específicos para retirada
+- Marcação automática de produtos como doação conforme data de vencimento
+
+### 🚚 Endereços de Retirada
+- Os supermercados podem definir um endereço padrão para retirada
+- Cada produto pode ter um endereço de retirada específico
+- Se não for definido um endereço específico, utiliza-se o endereço padrão do supermercado
+
+---
+
+## 🛠️ Resolução de Problemas
+
+### Erro 500 no Login
+Se você estiver enfrentando erro 500 (Internal Server Error) ao tentar fazer login, siga estes passos:
+
+1. Verifique se o backend está em execução (deve estar disponível em http://localhost:5207)
+2. Execute os scripts SQL de correção disponíveis na pasta `/backend/database/`:
+   ```bash
+   cd backend/database
+   sqlite3 appdata.db < fix_yago_user.sql
+   sqlite3 appdata.db < create_recovery_user.sql
+   ```
+3. Use as credenciais de recuperação para acesso emergencial:
+   - **Email**: admin@food4all.com
+   - **Senha**: admin
+
+### Erro ao Cadastrar Produtos
+Se ocorrerem erros ao cadastrar produtos no perfil de supermercado:
+
+1. Verifique se você está logado como um usuário do tipo "Supermercado"
+2. Certifique-se de que há um ID de supermercado associado à sua conta
+3. Execute o script `add_pickup_address.sql` para garantir que todas as colunas necessárias existam no banco de dados
+
+---
+
 ## 📞 Contato e Suporte
 Se precisar de ajuda ou quiser contribuir com o projeto, entre em contato pelo email **suporte@nossaplataforma.com**. 
 

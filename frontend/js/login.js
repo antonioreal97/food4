@@ -2,7 +2,6 @@ document.addEventListener("DOMContentLoaded", function () {
   // Seleciona os elementos principais
   const btnEstabelecimento = document.getElementById("btnEstabelecimento");
   const btnCliente = document.getElementById("btnCliente");
-  const btnLimparDados = document.getElementById("btnLimparDados");
   const typeSelection = document.getElementById("typeSelection");
   const formSection = document.getElementById("formSection");
 
@@ -68,19 +67,17 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Eventos dos botões de seleção de tipo
-  btnEstabelecimento.addEventListener("click", function () {
-    showLoginForm("Supermercado");
-  });
+  if (btnEstabelecimento) {
+    btnEstabelecimento.addEventListener("click", function () {
+      showLoginForm("Supermercado");
+    });
+  }
 
-  btnCliente.addEventListener("click", function () {
-    showLoginForm("Cozinha");
-  });
-  
-  // Botão para limpar os dados de teste
-  btnLimparDados.addEventListener("click", function() {
-    localStorage.clear();
-    alert("Todos os dados de login foram limpos! Você pode fazer um novo teste agora.");
-  });
+  if (btnCliente) {
+    btnCliente.addEventListener("click", function () {
+      showLoginForm("Cozinha");
+    });
+  }
 
   // Função para realizar o login via API
   async function loginUser(email, senha, role) {
@@ -92,6 +89,8 @@ document.addEventListener("DOMContentLoaded", function () {
     console.log(`Tentando login como ${role} com email: ${email}`);
 
     try {
+      console.log('Enviando dados:', JSON.stringify(data));
+      
       const response = await fetch("http://localhost:5207/api/auth/login", {
         method: "POST",
         headers: {
@@ -100,10 +99,13 @@ document.addEventListener("DOMContentLoaded", function () {
         body: JSON.stringify(data)
       });
 
+      console.log('Status da resposta:', response.status);
+      
       if (response.ok) {
         const result = await response.json();
         console.log("Resposta do login:", result);
         console.log("Tipo esperado:", role);
+        console.log("Conteúdo completo do user:", JSON.stringify(result.user, null, 2));
 
         // Usa a propriedade 'user' conforme a resposta do servidor
         if (result.user && !result.user.UserType) {
@@ -137,6 +139,9 @@ document.addEventListener("DOMContentLoaded", function () {
           
           if (result.user.SupermercadoId) {
             localStorage.setItem("supermercadoId", result.user.SupermercadoId);
+            console.log("SupermercadoId armazenado:", result.user.SupermercadoId);
+          } else {
+            console.log("SupermercadoId não disponível na resposta");
           }
           
           if (result.user.CozinhaId) {
@@ -158,22 +163,46 @@ document.addEventListener("DOMContentLoaded", function () {
           console.error("Mismatch de tipo de usuário: esperado", role, "recebido", result.user ? result.user.UserType : "nulo");
         }
       } else {
-        const errorData = await response.json().catch(() => null);
-        if (errorData && errorData.message) {
-          alert(`Erro: ${errorData.message}`);
-        } else {
-          alert("Login falhou. Verifique suas credenciais.");
+        let errorMessage = "Login falhou. ";
+        
+        try {
+          const errorData = await response.json();
+          console.log("Erro detalhado:", errorData);
+          
+          if (errorData && errorData.message) {
+            errorMessage += errorData.message;
+          } else {
+            errorMessage += "Verifique suas credenciais.";
+          }
+        } catch (jsonError) {
+          console.error("Erro ao processar resposta de erro:", jsonError);
+          
+          if (response.status === 401) {
+            errorMessage += "Credenciais inválidas.";
+          } else if (response.status === 404) {
+            errorMessage += "Servidor não encontrou o endpoint de login.";
+          } else if (response.status === 500) {
+            errorMessage += "Erro interno no servidor. Tente novamente mais tarde.";
+          } else {
+            errorMessage += `Código de erro: ${response.status}`;
+          }
         }
+        
+        alert(errorMessage);
       }
     } catch (error) {
       console.error("Erro ao realizar login:", error);
-      alert("Erro ao realizar login. Verifique sua conexão com o servidor.");
+      let errorMessage = "Erro ao realizar login. ";
+      
+      if (error.message && error.message.includes("Failed to fetch")) {
+        errorMessage += "Não foi possível conectar ao servidor. Verifique se o backend está em execução.";
+      } else {
+        errorMessage += "Verifique sua conexão com o servidor.";
+      }
+      
+      alert(errorMessage);
     }
   }
 
-  // Limpa os dados armazenados para testes
-  btnLimparDados.addEventListener("click", function () {
-    localStorage.clear();
-    alert("Dados limpos!");
-  });
+  // Código removido do botão limpar dados pois foi substituído pelo botão dinâmico
 });

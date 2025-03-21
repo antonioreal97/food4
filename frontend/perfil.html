@@ -20,6 +20,15 @@
   </header>
 
   <main class="container">
+    <!-- Seção de informações do perfil -->
+    <section id="profile-info" class="auth-card">
+      <h2 class="auth-title">Informações do Supermercado</h2>
+      <div class="profile-details">
+        <p><strong>Nome:</strong> <span id="profileName">Carregando...</span></p>
+        <p><strong>Endereço:</strong> <span id="profileAddress">Carregando...</span></p>
+      </div>
+    </section>
+    
     <!-- Seção para atualizar o endereço de retirada -->
     <section id="update-pickup" class="auth-card">
       <h2 class="auth-title">Atualizar Endereço de Retirada</h2>
@@ -39,6 +48,11 @@
         <div class="form-group">
           <label for="productName">Nome do Produto:</label>
           <input type="text" id="productName" name="productName" required>
+        </div>
+        <div class="form-group">
+          <label for="productImage">Imagem do Produto:</label>
+          <input type="file" id="productImage" name="productImage" accept="image/*" required>
+          <div id="imagePreview" class="image-preview"></div>
         </div>
         <div class="form-group">
           <label for="productExpiration">Data de Vencimento:</label>

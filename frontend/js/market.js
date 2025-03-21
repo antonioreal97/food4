@@ -2,6 +2,7 @@
 
 document.addEventListener('DOMContentLoaded', () => {
   const supermarketsContainer = document.getElementById('supermarkets-container');
+  const cartCountElement = document.getElementById("cart-count");
 
   // Função para criar o card do supermercado
   function createSupermarketCard(supermarket) {
@@ -12,8 +13,11 @@ document.addEventListener('DOMContentLoaded', () => {
       const header = document.createElement('div');
       header.classList.add('market-header');
       
+      // Usa o primeiro nome do supermercado e remove a palavra "Supermercado"
+      const logoFileName = supermarket.nome.split(' ')[0];
+
       header.innerHTML = `
-          <img src="images/market-placeholder.jpg" alt="${supermarket.nome}" class="market-logo">
+          <img src="img/${logoFileName}.png" alt="${supermarket.nome}" class="market-logo">
           <div class="market-info">
               <h3 class="market-name">${supermarket.nome}</h3>
               <div class="market-details">
@@ -42,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <h4 class="product-list-title">
               <i class="fas fa-box-open"></i>
               Produtos Disponíveis
-              <span class="badge">${supermarket.totalProdutos || 0} itens</span>
+              <span class="badge" id="badge-${supermarket.id}">0 itens</span>
           </h4>
           <ul class="product-items preview-products"></ul>
       `;
@@ -74,12 +78,26 @@ document.addEventListener('DOMContentLoaded', () => {
       fetch(`http://localhost:5207/api/produtos/supermercado/${supermarketId}`)
           .then(response => response.json())
           .then(products => {
+              const availableItemsCount = products.length;
+              const badge = document.getElementById(`badge-${supermarketId}`);
+              badge.textContent = `${availableItemsCount} itens`;
+
               container.innerHTML = products.slice(0, 3).map(product => `
                   <li class="product-item">
-                      <span class="product-name">${product.nome}</span>
-                      <span class="product-quantity ${product.status.toLowerCase()}">
-                          ${product.quantidade} unidades
-                      </span>
+                      <div class="product-image">
+                          <img src="${product.imagemUrl || 'img/produtos/product-placeholder.svg'}" 
+                               alt="${product.nome}"
+                               onerror="this.src='img/produtos/product-placeholder.svg'">
+                      </div>
+                      <div class="product-info">
+                          <span class="product-name">${product.nome}</span>
+                          <span class="product-quantity ${product.status.toLowerCase()}">
+                              ${product.status === 'doado' ? 'Doação' : `${product.desconto}% OFF`}
+                          </span>
+                          <span class="product-expiration">
+                              Vence em: ${new Date(product.dataVencimento).toLocaleDateString()}
+                          </span>
+                      </div>
                   </li>
               `).join('');
           })
@@ -123,4 +141,34 @@ document.addEventListener('DOMContentLoaded', () => {
   loadSupermarkets();
 
   // Adicione aqui event listeners para interações
+
+  // Função fictícia para obter os itens do carrinho
+  function getCartItems() {
+    // Esta função deve retornar a lista de itens no carrinho
+    // Aqui está um exemplo fictício
+    return JSON.parse(localStorage.getItem("cartItems")) || [];
+  }
+
+  // Atualize a badge com a quantidade de itens disponíveis
+  function updateCartCount() {
+    const cartItems = getCartItems();
+    const itemCount = cartItems.length;
+    cartCountElement.textContent = `${itemCount} itens`;
+  }
+
+  // Chame a função para atualizar a badge quando a página carregar
+  updateCartCount();
+
+  // Suponha que você tenha um evento para adicionar itens ao carrinho
+  document.querySelectorAll(".add-to-cart-btn").forEach(button => {
+    button.addEventListener("click", function () {
+      // Adiciona o item ao carrinho (exemplo fictício)
+      const cartItems = getCartItems();
+      cartItems.push({ id: this.dataset.productId, quantity: 1 });
+      localStorage.setItem("cartItems", JSON.stringify(cartItems));
+
+      // Atualiza a quantidade de itens no carrinho
+      updateCartCount();
+    });
+  });
 });

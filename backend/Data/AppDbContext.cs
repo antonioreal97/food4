@@ -14,6 +14,7 @@ namespace backend.Data
         public DbSet<Supermercado> Supermercados { get; set; }
         public DbSet<Transacao> Transacoes { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<ItemCarrinho> ItensCarrinho { get; set; }
 
         // Se necessário, configure o modelo aqui
         protected override void OnModelCreating(ModelBuilder modelBuilder)

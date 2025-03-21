@@ -154,6 +154,6 @@ flowchart TD
     UC3 -.-> Supermercados
     UC3 -.-> Cozinhas
     UC3 -.-> Administradores
-
+``
 
 

@@ -35,6 +35,8 @@ CREATE TABLE "Produtos" (
     "DataVencimento" TEXT NOT NULL,
     "Desconto" REAL NOT NULL,
     "Status" TEXT NOT NULL,
+    "ImagemUrl" TEXT,
+    "PickupAddress" TEXT,
     "SupermercadoId" INTEGER NOT NULL,
     FOREIGN KEY ("SupermercadoId") REFERENCES "Supermercados" ("Id") ON DELETE CASCADE
 );

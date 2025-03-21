@@ -50,18 +50,12 @@ namespace backend.Services
         // Autentica um usuário
         public async Task<User> AuthenticateAsync(string email, string password)
         {
-            var user = await _context.Users
-                .Include(u => u.Supermercado)
-                .Include(u => u.Cozinha)
-                .FirstOrDefaultAsync(u => u.Email == email);
+            var user = await _context.Users.SingleOrDefaultAsync(u => u.Email == email);
 
-            // Usuário não encontrado
-            if (user == null)
+            if (user == null || !VerifyPassword(password, user.PasswordHash))
+            {
                 return null;
-
-            // Verifica se a senha está correta
-            if (!VerifyPassword(password, user.PasswordHash))
-                return null;
+            }
 
             return user;
         }

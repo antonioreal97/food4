@@ -1,6 +1,6 @@
-INSTRUÇÕES PARA CRIAR O BANCO DE DADOS SQLITE MANUALMENTE
+INSTRUÇÕES PARA CRIAR E ATUALIZAR O BANCO DE DADOS SQLITE MANUALMENTE
 
-Se você está tendo problemas com o comando 'dotnet ef database update', você pode criar o banco de dados manualmente seguindo estas instruções:
+Se você está tendo problemas com o comando 'dotnet ef database update', você pode criar e atualizar o banco de dados manualmente seguindo estas instruções:
 
 Método 1: Usando os comandos do Entity Framework Core (recomendado)
 ------------------------------------------------------------------
@@ -12,7 +12,7 @@ Método 1: Usando os comandos do Entity Framework Core (recomendado)
 4. Execute os comandos Entity Framework:
    dotnet ef database update
 
-Método 2: Criando o banco de dados SQLite manualmente
+Método 2: Criando e atualizando o banco de dados SQLite manualmente
 ----------------------------------------------------
 Se o Método 1 falhar, você pode criar o banco de dados manualmente:
 
@@ -24,6 +24,13 @@ Se o Método 1 falhar, você pode criar o banco de dados manualmente:
    cd C:\Users\anton\OneDrive\Documentos\Food4LL\food4\backend
 4. Execute o comando SQLite para criar o banco de dados:
    sqlite3 database\appdata.db < database\init.sql
+5. Para aplicar as atualizações ao esquema (novos campos), execute:
+   sqlite3 database\appdata.db < database\add_pickup_address.sql
+
+IMPORTANTE: O arquivo add_pickup_address.sql adiciona os campos necessários para:
+- Armazenar endereços de retirada para os supermercados (tabela Supermercados)
+- Armazenar endereços de retirada específicos para produtos (tabela Produtos)
+- Armazenar URLs de imagens para produtos (tabela Produtos)
 
 Método 3: Usando ferramentas gráficas
 ------------------------------------

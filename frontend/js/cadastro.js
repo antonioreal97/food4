@@ -123,12 +123,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 userType: "Supermercado"
             }, function(userData) {
                 // Depois registra os dados do supermercado
+                // Agora conforme o modelo do backend (Nome, Endereco, Contato, PickupAddress)
                 handleEntityRegistration('supermercados', {
                     nome: document.getElementById("nomeEstab").value,
                     endereco: document.getElementById("enderecoEstab").value,
                     contato: document.getElementById("contatoEstab").value,
-                    email: document.getElementById("emailEstab").value,
-                    cnpj: "12345678901234" // Valor padrão para fins de demonstração
+                    pickupAddress: "Mesmo endereço do estabelecimento" // Valor padrão para o endereço de coleta
                 }, userData);
             });
         });
@@ -182,6 +182,9 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const serverUrl = 'http://localhost:5207/api/auth/register';
         console.log(`Tentando conectar a: ${serverUrl}`);
+
+        // Log do corpo da solicitação
+        console.log("Corpo da solicitação:", JSON.stringify(userData));
   
         // Faz diretamente o POST
         fetch(serverUrl, {
@@ -223,30 +226,10 @@ document.addEventListener('DOMContentLoaded', function() {
             let processedResult = result;
             
             // Caso 1: O resultado é apenas um objeto User sem o token
-            if (result && result.id && !result.Token && !result.User) {
-                console.log("Convertendo resultado para o formato esperado");
+            if (result && result.user && result.token) {
                 processedResult = {
-                    Token: localStorage.getItem("token") || "token-placeholder",
-                    User: {
-                        Id: result.id,
-                        Name: result.name,
-                        Email: result.email,
-                        UserType: result.userType || "Cozinha"
-                    }
-                };
-            }
-            
-            // Caso 2: O token está presente mas os dados do usuário estão no nível raiz
-            if (result && result.Token && !result.User && result.Id) {
-                console.log("Estruturando dados do usuário");
-                processedResult = {
-                    Token: result.Token,
-                    User: {
-                        Id: result.Id,
-                        Name: result.Name,
-                        Email: result.Email,
-                        UserType: result.UserType
-                    }
+                    Token: result.token,
+                    User: result.user
                 };
             }
             
@@ -260,9 +243,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.warn("Objeto User não encontrado, criando estrutura");
                 processedResult.User = {
                     Id: result.id || result.Id || new Date().getTime(),
-                    Name: result.name || result.Name || document.getElementById("nomeCliente").value || "Usuário",
-                    Email: result.email || result.Email || document.getElementById("emailCliente").value || "email@exemplo.com",
-                    UserType: result.userType || result.UserType || "Cozinha"
+                    Name: result.name || result.Name || userData.name || "Usuário",
+                    Email: result.email || result.Email || userData.email || "email@exemplo.com",
+                    UserType: result.userType || result.UserType || userData.userType || "Cozinha"
                 };
             }
             
@@ -303,6 +286,10 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
+        // Log para debug do corpo da requisição
+        console.log("Corpo da requisição JSON:", JSON.stringify(entityData));
+        console.log("Token para autorização:", userData.Token);
+        
         fetch(`http://localhost:5207/api/${endpoint}`, {
             method: 'POST',
             headers: {
@@ -312,6 +299,18 @@ document.addEventListener('DOMContentLoaded', function() {
             body: JSON.stringify(entityData)
         })
         .then(response => {
+            // Log detalhado da resposta
+            console.log("Status da resposta:", response.status);
+            console.log("Headers da resposta:", [...response.headers.entries()]);
+            
+            // Clone a resposta para poder lê-la duas vezes
+            const clonedResponse = response.clone();
+            
+            // Log da resposta bruta (texto)
+            clonedResponse.text().then(rawResponse => {
+                console.log("Resposta bruta do servidor:", rawResponse);
+            });
+            
             if (!response.ok) {
                 return response.json().catch(() => {
                     // Se falhar ao ler como JSON, tenta ler como texto
@@ -325,15 +324,21 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(result => {
             console.log("Resposta do registro da entidade:", result);
             
-            // Verifica se o resultado contém um ID
-            if (result && result.id) {
-                // Salva o ID da entidade
+            // Verifica se o resultado contém um ID (podem ser 'id' ou 'Id')
+            if (result && (result.id || result.Id)) {
+                // Salva o ID da entidade, pegando a propriedade correta
+                const entityId = result.id || result.Id;
                 const userType = userData.User.UserType || localStorage.getItem("userType");
                 
+                console.log(`ID da entidade ${endpoint}:`, entityId);
+                console.log(`Tipo de usuário:`, userType);
+                
                 if (userType === 'Supermercado') {
-                    localStorage.setItem("supermercadoId", result.id);
+                    localStorage.setItem("supermercadoId", entityId);
+                    console.log("SupermercadoId armazenado:", entityId);
                 } else {
-                    localStorage.setItem("cozinhaId", result.id);
+                    localStorage.setItem("cozinhaId", entityId);
+                    console.log("CozinhaId armazenado:", entityId);
                 }
                 
                 alert('Cadastro realizado com sucesso!');
@@ -350,9 +355,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         })
         .catch(error => {
-            console.error('Erro:', error);
+            console.error('Erro no cadastro:', error);
             alert('Erro no cadastro: ' + error.message);
         });
     }
   });
-  

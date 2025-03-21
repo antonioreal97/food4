@@ -22,7 +22,12 @@ namespace backend.Authentication
         {
             // Obtém a chave secreta do appsettings.json
             var jwtSettings = _configuration.GetSection("JwtSettings");
-            var key = Encoding.ASCII.GetBytes(jwtSettings.GetValue<string>("SecretKey"));
+            var secretKey = jwtSettings.GetValue<string>("SecretKey");
+            if (string.IsNullOrEmpty(secretKey))
+            {
+                throw new InvalidOperationException("SecretKey is not configured properly.");
+            }
+            var key = Encoding.ASCII.GetBytes(secretKey);
             
             // Define as claims do usuário
             var claims = new List<Claim>
@@ -60,14 +65,19 @@ namespace backend.Authentication
             return tokenHandler.WriteToken(token);
         }
 
-        public bool ValidateToken(string token, out ClaimsPrincipal principal)
+        public bool ValidateToken(string token, out ClaimsPrincipal? principal)
         {
             principal = null;
             
             try
             {
                 var jwtSettings = _configuration.GetSection("JwtSettings");
-                var key = Encoding.ASCII.GetBytes(jwtSettings.GetValue<string>("SecretKey"));
+                var secretKey = jwtSettings.GetValue<string>("SecretKey");
+                if (string.IsNullOrEmpty(secretKey))
+                {
+                    throw new InvalidOperationException("SecretKey is not configured properly.");
+                }
+                var key = Encoding.ASCII.GetBytes(secretKey);
                 
                 var tokenValidationParameters = new TokenValidationParameters
                 {

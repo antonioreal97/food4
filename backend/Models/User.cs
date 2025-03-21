@@ -27,10 +27,10 @@ namespace backend.Models
         public int? CozinhaId { get; set; }
         
         [ForeignKey("SupermercadoId")]
-        public Supermercado Supermercado { get; set; }
+        public Supermercado? Supermercado { get; set; }
         
         [ForeignKey("CozinhaId")]
-        public Cozinha Cozinha { get; set; }
+        public Cozinha? Cozinha { get; set; }
         
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;

@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Food For All - Feira</title>
+  <title>Food For All - Carrinho</title>
   <link rel="stylesheet" href="css/market.css">
-  <!-- Adicione ícones (ex: Font Awesome) -->
+  <!-- Ícones (ex: Font Awesome) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <link rel="stylesheet" href="css/styles.css">
 </head>
@@ -17,20 +17,28 @@
         <h1>Food For All Market</h1>
       </a>
       <nav class="main-nav">
-        <a href="perfil.html" class="nav-link"><i class="fas fa-home"></i> Home</a>
+        <a href="index.html" class="nav-link"><i class="fas fa-home"></i> Home</a>
         <a href="logout.html" class="nav-link"><i class="fas fa-sign-out-alt"></i> Sair</a>
         <a href="cart.html" class="nav-link">
           <i class="fas fa-shopping-cart"></i> 
-          <span class="badge" id="cart-count">0</span>
+          <span class="badge" id="cart-count">0 itens</span>
         </a>
       </nav>
     </div>
   </header>
 
   <main class="container">
-    <section class="supermarkets-section">
-      <h2 class="section-title">Supermercados Parceiros com Produtos Disponíveis</h2>
-      <div id="supermarkets-container"></div>
+    <section id="cart">
+      <h2 class="section-title">Carrinho de Compras</h2>
+      <div id="cart-items">
+        <!-- Os itens do carrinho serão listados aqui -->
+        <ul class="cart-items-list"></ul>
+      </div>
+      <div id="cart-summary">
+        <h3>Resumo do Pedido</h3>
+        <p>Total: R$ <span id="total-price">0,00</span></p>
+        <button id="checkout-button">Finalizar Compra</button>
+      </div>
     </section>
   </main>
 
@@ -45,6 +53,6 @@
     </div>
   </footer>
 
-  <script src="js/market.js"></script>
+  <script src="js/cart.js"></script>
 </body>
 </html>
