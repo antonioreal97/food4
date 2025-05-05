@@ -7,6 +7,15 @@
   <title>Food For All - Plataforma Solidária</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/video.css">
+  <script>
+    // Verifica se o usuário já viu a introdução
+    window.onload = function() {
+      if (!localStorage.getItem('introVisto')) {
+        window.location.href = 'intro.html';
+      }
+    };
+  </script>
 </head>
 <body>
   <header class="header">

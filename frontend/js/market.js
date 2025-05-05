@@ -82,24 +82,39 @@ document.addEventListener('DOMContentLoaded', () => {
               const badge = document.getElementById(`badge-${supermarketId}`);
               badge.textContent = `${availableItemsCount} itens`;
 
-              container.innerHTML = products.slice(0, 3).map(product => `
-                  <li class="product-item">
-                      <div class="product-image">
-                          <img src="${product.imagemUrl || 'img/produtos/product-placeholder.svg'}" 
-                               alt="${product.nome}"
-                               onerror="this.src='img/produtos/product-placeholder.svg'">
-                      </div>
-                      <div class="product-info">
-                          <span class="product-name">${product.nome}</span>
-                          <span class="product-quantity ${product.status.toLowerCase()}">
-                              ${product.status === 'doado' ? 'Doação' : `${product.desconto}% OFF`}
-                          </span>
-                          <span class="product-expiration">
-                              Vence em: ${new Date(product.dataVencimento).toLocaleDateString()}
-                          </span>
-                      </div>
-                  </li>
-              `).join('');
+              container.innerHTML = products.slice(0, 3).map(product => {
+                  // Resolve o caminho da imagem
+                  let imagemUrl = product.imagemUrl || './img/produtos/product-placeholder.svg';
+                  
+                  // Se a URL começar com /frontend, remove essa parte
+                  if (imagemUrl.startsWith('/frontend/')) {
+                      imagemUrl = imagemUrl.substring(9);
+                  }
+                  
+                  // Se a URL não começar com ./, adiciona
+                  if (!imagemUrl.startsWith('./')) {
+                      imagemUrl = './' + imagemUrl;
+                  }
+
+                  return `
+                      <li class="product-item">
+                          <div class="product-image">
+                              <img src="${imagemUrl}" 
+                                   alt="${product.nome}"
+                                   onerror="this.src='./img/produtos/product-placeholder.svg'">
+                          </div>
+                          <div class="product-info">
+                              <span class="product-name">${product.nome}</span>
+                              <span class="product-quantity ${product.status.toLowerCase()}">
+                                  ${product.status === 'doado' ? 'Doação' : `${product.desconto}% OFF`}
+                              </span>
+                              <span class="product-expiration">
+                                  Vence em: ${new Date(product.dataVencimento).toLocaleDateString()}
+                              </span>
+                          </div>
+                      </li>
+                  `;
+              }).join('');
           })
           .catch(error => {
               console.error('Erro ao carregar produtos:', error);

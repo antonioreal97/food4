@@ -1,5 +1,331 @@
 // perfil.js
 
+// Funções globais para manipulação de produtos
+let globalToken = null;
+
+window.openEditModal = function(product) {
+  const modal = document.createElement('div');
+  modal.className = 'modal';
+  modal.innerHTML = `
+    <div class="modal-content">
+      <h2>Editar Produto</h2>
+      <form id="editProductForm">
+        <div class="form-group">
+          <label for="editProductName">Nome do Produto:</label>
+          <input type="text" id="editProductName" value="${product.nome}" required>
+        </div>
+        <div class="form-group">
+          <label for="editProductExpiration">Data de Vencimento:</label>
+          <input type="date" id="editProductExpiration" value="${product.dataVencimento.split('T')[0]}" required>
+        </div>
+        <div class="form-group">
+          <label for="editProductDiscount">Desconto (%):</label>
+          <input type="number" id="editProductDiscount" value="${product.desconto}" min="0" max="100">
+        </div>
+        <div class="form-group">
+          <label for="editProductPickup">Endereço de Retirada:</label>
+          <input type="text" id="editProductPickup" value="${product.pickupAddress}" required>
+        </div>
+        <div class="form-group">
+          <label>
+            <input type="checkbox" id="editProductDonation" ${product.status === 'doado' ? 'checked' : ''}>
+            Produto para Doação
+          </label>
+        </div>
+        <div class="modal-buttons">
+          <button type="submit" class="btn-save">Salvar</button>
+          <button type="button" class="btn-cancel">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+
+  // Adiciona os event listeners
+  const form = modal.querySelector('#editProductForm');
+  const cancelButton = modal.querySelector('.btn-cancel');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const updatedProduct = {
+      id: product.id,
+      nome: document.getElementById('editProductName').value.trim(),
+      dataVencimento: document.getElementById('editProductExpiration').value,
+      desconto: parseFloat(document.getElementById('editProductDiscount').value) || 0,
+      status: document.getElementById('editProductDonation').checked ? 'doado' : 'disponível',
+      pickupAddress: document.getElementById('editProductPickup').value.trim(),
+      supermercadoId: Number(product.supermercadoId),
+      imagemUrl: product.imagemUrl || null,
+      quantidade: Number(product.quantidade) || 1,
+      preco: Number(product.preco) || 0,
+      categoria: product.categoria || 'Geral'
+    };
+
+    // Validações básicas
+    if (!updatedProduct.nome) {
+      alert('O nome do produto é obrigatório.');
+      return;
+    }
+
+    if (!updatedProduct.dataVencimento) {
+      alert('A data de vencimento é obrigatória.');
+      return;
+    }
+
+    if (!updatedProduct.pickupAddress) {
+      alert('O endereço de retirada é obrigatório.');
+      return;
+    }
+
+    console.log('Dados do produto antes da atualização:', updatedProduct);
+    await window.editProduto(product.id, updatedProduct);
+    document.body.removeChild(modal);
+  });
+
+  cancelButton.addEventListener('click', () => {
+    document.body.removeChild(modal);
+  });
+};
+
+window.deleteProduto = async function(produtoId) {
+  const currentSupermercadoId = localStorage.getItem('supermercadoId');
+  
+  try {
+    // Primeiro, verifica se o produto pertence ao supermercado logado
+    const response = await fetch(`http://localhost:5207/api/produtos/${produtoId}`, {
+      headers: {
+        'Authorization': `Bearer ${globalToken}`
+      }
+    });
+    
+    if (!response.ok) {
+      throw new Error('Produto não encontrado');
+    }
+    
+    const produto = await response.json();
+    if (Number(produto.supermercadoId) !== Number(currentSupermercadoId)) {
+      alert('Você não tem permissão para excluir este produto.');
+      return;
+    }
+    
+    if (!confirm('Tem certeza que deseja excluir este produto?')) {
+      return;
+    }
+
+    const deleteResponse = await fetch(`http://localhost:5207/api/produtos/${produtoId}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${globalToken}`
+      }
+    });
+
+    if (deleteResponse.ok) {
+      alert('Produto excluído com sucesso!');
+      window.loadProducts(); // Recarrega a lista de produtos
+    } else {
+      const errorData = await deleteResponse.json();
+      throw new Error(errorData.message || 'Erro ao excluir produto');
+    }
+  } catch (error) {
+    console.error('Erro ao excluir produto:', error);
+    alert('Erro ao excluir produto: ' + error.message);
+  }
+};
+
+window.editProduto = async function(produtoId, produto) {
+  const currentSupermercadoId = localStorage.getItem('supermercadoId');
+  
+  try {
+    // Verifica se o produto pertence ao supermercado logado
+    if (Number(produto.supermercadoId) !== Number(currentSupermercadoId)) {
+      alert('Você não tem permissão para editar este produto.');
+      return;
+    }
+    
+    // Limpa o cache local antes de formatar o produto
+    localStorage.removeItem(`produto_${produtoId}`);
+    
+    // Formata a data para o formato esperado pela API
+    const formattedProduct = {
+      id: Number(produtoId),
+      nome: produto.nome,
+      dataVencimento: new Date(produto.dataVencimento).toISOString(),
+      desconto: Number(produto.desconto),
+      status: produto.status.toLowerCase(),
+      pickupAddress: produto.pickupAddress,
+      supermercadoId: Number(produto.supermercadoId),
+      imagemUrl: produto.imagemUrl || null
+    };
+
+    console.log('Enviando dados para atualização:', formattedProduct);
+
+    const response = await fetch(`http://localhost:5207/api/produtos/${produtoId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${globalToken}`,
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+      },
+      body: JSON.stringify(formattedProduct)
+    });
+
+    console.log('Status da resposta:', response.status);
+    console.log('Response headers:', Object.fromEntries(response.headers.entries()));
+
+    if (response.ok) {
+      console.log('Produto atualizado com sucesso');
+      alert('Produto atualizado com sucesso!');
+      
+      // Força um pequeno delay antes de recarregar os produtos
+      // e limpa qualquer cache que possa existir
+      setTimeout(() => {
+        localStorage.removeItem(`produto_${produtoId}`);
+        window.loadProducts();
+      }, 500);
+    } else {
+      let errorMessage = 'Erro ao atualizar produto';
+      const responseText = await response.text();
+      console.error('Resposta de erro completa:', responseText);
+      
+      try {
+        const errorData = JSON.parse(responseText);
+        console.error('Erro retornado pela API:', errorData);
+        errorMessage = errorData.message || errorMessage;
+      } catch (e) {
+        console.error('Erro ao ler resposta de erro:', e);
+      }
+      throw new Error(errorMessage);
+    }
+  } catch (error) {
+    console.error('Erro ao atualizar produto:', error);
+    alert('Erro ao atualizar produto: ' + error.message);
+  }
+};
+
+// Função para resolver URLs de imagens
+function resolveImageUrl(url) {
+  if (!url) return './img/produtos/product-placeholder.svg';
+  
+  // Se a URL começar com /frontend, remove essa parte
+  if (url.startsWith('/frontend/')) {
+    url = url.substring(9); // Remove '/frontend'
+  }
+  
+  // Se a URL não começar com /, adiciona ./
+  if (!url.startsWith('/')) {
+    url = './' + url;
+  } else {
+    url = '.' + url;
+  }
+  
+  return url;
+}
+
+window.loadProducts = async function() {
+  const productsContainer = document.getElementById('productsContainer');
+  if (!productsContainer) return;
+  
+  const currentSupermercadoId = localStorage.getItem('supermercadoId');
+  
+  console.log(`Carregando produtos. supermercadoId atual: ${currentSupermercadoId}`);
+  
+  productsContainer.innerHTML = '<div class="loading-state">Carregando produtos...</div>';
+  
+  try {
+    const idToUse = currentSupermercadoId || supermercadoId;
+    console.log(`Buscando produtos para o supermercado ID: ${idToUse}`);
+    
+    // Adiciona um timestamp para evitar cache
+    const timestamp = new Date().getTime();
+    const response = await fetch(`http://localhost:5207/api/produtos/supermercado/${idToUse}?_=${timestamp}`, {
+      headers: {
+        'Authorization': `Bearer ${globalToken}`,
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+      }
+    });
+    
+    console.log(`Status da resposta de produtos: ${response.status}`);
+    
+    if (response.ok) {
+      const products = await response.json();
+      console.log(`Produtos recebidos: ${products.length}`);
+      console.log('Dados dos produtos:', products);
+      
+      if (Array.isArray(products) && products.length > 0) {
+        const formatDate = (dateString) => {
+          const date = new Date(dateString);
+          return date.toLocaleDateString('pt-BR');
+        };
+        
+        const getStatusClass = (status) => {
+          if (!status) return 'status-disponivel';
+          
+          status = status.toLowerCase();
+          if (status === 'doado') return 'status-doacao';
+          if (status === 'vencido') return 'status-vencido';
+          return 'status-desconto';
+        };
+        
+        let html = '<div class="products-list">';
+        
+        products.forEach(product => {
+          const formattedDate = formatDate(product.dataVencimento);
+          const statusClass = getStatusClass(product.status);
+          const pickupAddress = product.pickupAddress || 'Utilize o endereço principal do supermercado';
+          
+          // Resolve o caminho da imagem
+          const imagemUrl = resolveImageUrl(product.imagemUrl);
+          console.log(`URL da imagem original: ${product.imagemUrl}`);
+          console.log(`URL da imagem resolvida: ${imagemUrl}`);
+          
+          // Verifica se o produto pertence ao supermercado logado
+          const isOwner = Number(product.supermercadoId) === Number(idToUse);
+          
+          html += `
+            <div class="product-card">
+              <div class="product-info">
+                <div class="product-image">
+                  <img src="${imagemUrl}" alt="${product.nome}" onerror="this.src='./img/produtos/product-placeholder.svg'">
+                </div>
+                <div class="product-name">${product.nome}</div>
+                <div class="product-details">
+                  <span>Vence em: ${formattedDate}</span>
+                  <span class="product-status ${statusClass}">${product.status || 'Disponível'}</span>
+                  <span>Desconto: ${product.desconto}%</span>
+                  <small>Endereço para retirada: ${pickupAddress}</small>
+                </div>
+                ${isOwner ? `
+                  <div class="product-actions">
+                    <button onclick="openEditModal(${JSON.stringify(product).replace(/"/g, '&quot;')})" class="btn-edit">Editar</button>
+                    <button onclick="deleteProduto(${product.id})" class="btn-delete">Excluir</button>
+                  </div>
+                ` : ''}
+              </div>
+            </div>
+          `;
+        });
+        
+        html += '</div>';
+        productsContainer.innerHTML = html;
+      } else {
+        productsContainer.innerHTML = '<div class="empty-state">Nenhum produto cadastrado. Use o formulário acima para adicionar seus primeiros produtos.</div>';
+      }
+    } else {
+      const errorMessage = await response.text().catch(() => null);
+      console.error('Erro na resposta do servidor:', errorMessage);
+      productsContainer.innerHTML = '<div class="empty-state">Erro ao carregar produtos. Tente novamente mais tarde.</div>';
+    }
+  } catch (error) {
+    console.error('Erro ao carregar produtos:', error);
+    productsContainer.innerHTML = '<div class="empty-state">Erro ao carregar produtos. Verifique sua conexão.</div>';
+  }
+};
+
 document.addEventListener('DOMContentLoaded', async () => {
   // Verifica se o usuário está logado
   const token = localStorage.getItem('token');
@@ -8,6 +334,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.location.href = 'login.html';
     return;
   }
+
+  // Armazena o token globalmente
+  globalToken = token;
 
   // Função para decodificar token JWT sem bibliotecas externas
   function parseJwt(token) {
@@ -24,90 +353,125 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 
-  // Tenta obter o userId e userType do token JWT
-  let tokenData = parseJwt(token);
-  console.log('Dados do token JWT:', tokenData);
-  
-  // Extrai o ID do usuário e tipo do token
-  let userId = tokenData ? tokenData.nameid : null;
-  let userType = tokenData ? tokenData.role : null;
-  
-  console.log('Extraído do JWT - userId:', userId, 'userType:', userType);
-  
-  // Fallback para localStorage, se necessário
-  if (!userId) userId = localStorage.getItem('userId');
-  if (!userType) userType = localStorage.getItem('userType');
-  
-  // Busca o ID do supermercado
-  let supermercadoId = localStorage.getItem('supermercadoId');
-  
-  console.log('Dados finais para uso:');
-  console.log('userType:', userType);
-  console.log('userId:', userId);
-  console.log('supermercadoId:', supermercadoId);
-  
-  // Verifica se o usuário é do tipo correto para esta página
-  if (userType !== 'Supermercado') {
-    alert('Esta página é apenas para supermercados.');
-    window.location.href = 'login.html';
-    return;
-  }
-  
-  // Se não temos o ID de usuário, devemos obter do servidor
-  if (!userId) {
+  const decodedToken = parseJwt(token);
+  const userId = decodedToken.nameid;
+  const userType = decodedToken.role;
+  let supermercadoId = decodedToken.SupermercadoId;
+
+  // Função para cadastrar um novo produto
+  async function submitProductFormData(event) {
+    event.preventDefault();
+
+    const formData = new FormData();
+    formData.append('Nome', document.getElementById('productName').value);
+    formData.append('DataVencimento', document.getElementById('productExpiration').value);
+    formData.append('Desconto', document.getElementById('productDiscount').value || '0');
+    formData.append('Status', document.getElementById('productDonation').checked ? 'doado' : 'disponível');
+    formData.append('SupermercadoId', supermercadoId);
+    
+    // Garante que o endereço de retirada seja preenchido
+    const pickupAddress = document.getElementById('productPickup').value;
+    if (!pickupAddress) {
+        alert('Por favor, preencha o endereço de retirada do produto.');
+        return;
+    }
+    formData.append('PickupAddress', pickupAddress);
+
+    // Verifica se uma imagem foi selecionada
+    const imageFile = document.getElementById('productImage').files[0];
+    if (!imageFile) {
+        alert('Por favor, selecione uma imagem para o produto.');
+        return;
+    }
+
+    // Verifica o tamanho da imagem (máximo 5MB)
+    if (imageFile.size > 5 * 1024 * 1024) {
+        alert('A imagem deve ter no máximo 5MB.');
+        return;
+    }
+
+    // Verifica o tipo da imagem
+    if (!imageFile.type.startsWith('image/')) {
+        alert('Por favor, selecione um arquivo de imagem válido.');
+        return;
+    }
+
+    formData.append('Imagem', imageFile);
+
+    // Log dos dados que estão sendo enviados
+    console.log('Dados do formulário:');
+    for (let [key, value] of formData.entries()) {
+        if (value instanceof File) {
+            console.log(`${key}: [File] ${value.name} (${value.type}, ${value.size} bytes)`);
+        } else {
+            console.log(`${key}: ${value}`);
+        }
+    }
+
     try {
-      console.log('Tentando obter informações do usuário do servidor...');
-      const response = await fetch('http://localhost:5207/api/auth/me', {
-        headers: {
-          'Authorization': `Bearer ${token}`
+        console.log('Enviando requisição para criar produto...');
+        const apiUrl = 'http://localhost:5207/api/produtos/criar';
+        console.log(`URL da API: ${apiUrl}`);
+
+        const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+            body: formData,
+            credentials: 'include' // Importante para CORS com cookies
+        });
+
+        console.log(`Status da resposta: ${response.status}`);
+        console.log(`Headers da resposta:`, Object.fromEntries(response.headers.entries()));
+
+        if (!response.ok) {
+            let errorMessage = 'Erro desconhecido ao cadastrar produto.';
+            try {
+                const errorData = await response.json();
+                console.error('Erro detalhado:', errorData);
+                errorMessage = errorData.message || errorMessage;
+            } catch (e) {
+                console.error('Erro ao parsear resposta de erro:', e);
+            }
+            throw new Error(errorMessage);
         }
-      });
-      
-      if (response.ok) {
-        const userData = await response.json();
-        console.log('Dados do usuário obtidos do servidor:', userData);
+
+        const result = await response.json();
+        console.log('Produto cadastrado:', result);
+        alert('Produto cadastrado com sucesso!');
+        document.getElementById('productForm').reset();
         
-        // Salva os dados do usuário no localStorage
-        userId = userData.id;
-        localStorage.setItem('userId', userId);
-        
-        if (userData.userType) {
-          userType = userData.userType;
-          localStorage.setItem('userType', userType);
+        // Limpa o preview da imagem
+        const imagePreview = document.getElementById('imagePreview');
+        if (imagePreview) {
+            imagePreview.innerHTML = '';
+            imagePreview.classList.remove('active');
         }
         
-        if (userData.supermercadoId) {
-          supermercadoId = userData.supermercadoId;
-          localStorage.setItem('supermercadoId', supermercadoId);
-        }
-        
-        console.log('Dados atualizados após consulta:');
-        console.log('userType:', userType);
-        console.log('userId:', userId);
-        console.log('supermercadoId:', supermercadoId);
-      } else {
-        console.error('Erro ao obter informações do usuário:', response.status);
-      }
+        // Recarrega a lista de produtos
+        loadProducts();
     } catch (error) {
-      console.error('Erro ao consultar informações do usuário:', error);
+        console.error('Erro ao cadastrar produto:', error);
+        console.error('Stack trace:', error.stack);
+        
+        // Mensagem de erro mais detalhada para o usuário
+        let userMessage = 'Erro ao cadastrar produto. ';
+        if (error.message.includes('Failed to fetch')) {
+            userMessage += 'Não foi possível conectar ao servidor. Verifique sua conexão e tente novamente.';
+        } else {
+            userMessage += error.message;
+        }
+        alert(userMessage);
     }
   }
-  
-  // Se ainda não temos userId, não podemos continuar
-  if (!userId) {
-    console.error('Não foi possível obter o ID do usuário.');
-    alert('Erro ao obter informações do usuário. Faça login novamente.');
-    window.location.href = 'login.html';
-    return;
-  }
-  
-  // Identificador para uso nas funções
-  const supermercadoIdentificador = supermercadoId || userId;
+
+  document.getElementById('productForm').addEventListener('submit', submitProductFormData);
 
   // Função para carregar e exibir as informações do supermercado logado
   async function loadProfile() {
     try {
-      console.log(`Carregando perfil para identificador: ${supermercadoIdentificador}`);
+      console.log(`Carregando perfil para identificador: ${supermercadoId}`);
       console.log(`userType: ${userType}, userId: ${userId}`);
       
       // Primeiro, tentamos buscar os dados atualizados do usuário
@@ -245,6 +609,31 @@ document.addEventListener('DOMContentLoaded', async () => {
     const profileNameElement = document.getElementById('profileName');
     if (profileNameElement) {
       profileNameElement.textContent = profile.nome || 'Nome não informado';
+      
+      // Atualiza a imagem do perfil
+      const profileImageElement = document.getElementById('profileImage');
+      if (profileImageElement) {
+        // Extrai o nome do supermercado
+        const nomeCompleto = profile.nome || '';
+        let nomeArquivo = nomeCompleto.split(' ')[0]; // Pega o primeiro nome
+        
+        // Se o nome já começa com "Super", não adiciona novamente
+        if (!nomeArquivo.startsWith('Super')) {
+          nomeArquivo = 'Super' + nomeArquivo;
+        }
+        
+        // Define o caminho da imagem
+        const imagePath = `./img/${nomeArquivo}.png`;
+        
+        console.log('Tentando carregar imagem:', imagePath);
+        
+        // Define a imagem e um fallback caso não seja encontrada
+        profileImageElement.src = imagePath;
+        profileImageElement.onerror = function() {
+          console.log('Imagem não encontrada, usando logo padrão');
+          this.src = './img/logo.png';
+        };
+      }
     }
     
     const profileAddressElement = document.getElementById('profileAddress');
@@ -265,92 +654,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     } else if (productPickupInput && profile.endereco) {
       // Se não houver endereço de retirada, usa o endereço principal
       productPickupInput.value = profile.endereco;
-    }
-  }
-
-  // Função para carregar e exibir os produtos cadastrados para o supermercado logado
-  async function loadProducts() {
-    const productsContainer = document.getElementById('productsContainer');
-    if (!productsContainer) return;
-    
-    // Atualizamos o ID do supermercado caso tenha sido definido após a primeira chamada
-    const currentSupermercadoId = localStorage.getItem('supermercadoId');
-    
-    console.log(`Carregando produtos. supermercadoId atual: ${currentSupermercadoId}`);
-    
-    productsContainer.innerHTML = '<div class="loading-state">Carregando produtos...</div>';
-    
-    try {
-      // Usa o ID mais recente que temos
-      const idToUse = currentSupermercadoId || supermercadoIdentificador;
-      console.log(`Buscando produtos para o supermercado ID: ${idToUse}`);
-      
-      const response = await fetch(`http://localhost:5207/api/produtos/supermercado/${idToUse}`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
-      
-      console.log(`Status da resposta de produtos: ${response.status}`);
-      
-      if (response.ok) {
-        const products = await response.json();
-        console.log(`Produtos recebidos: ${products.length}`);
-        
-        if (Array.isArray(products) && products.length > 0) {
-          // Formata a data para o padrão brasileiro
-          const formatDate = (dateString) => {
-            const date = new Date(dateString);
-            return date.toLocaleDateString('pt-BR');
-          };
-          
-          // Determina a classe CSS para o status
-          const getStatusClass = (status) => {
-            if (!status) return 'status-disponivel';
-            
-            status = status.toLowerCase();
-            if (status === 'doado') return 'status-doacao';
-            if (status === 'vencido') return 'status-vencido';
-            return 'status-desconto';
-          };
-          
-          let html = '<div class="products-list">';
-          
-          products.forEach(product => {
-            const formattedDate = formatDate(product.dataVencimento);
-            const statusClass = getStatusClass(product.status);
-            const pickupAddress = product.pickupAddress || 'Utilize o endereço principal do supermercado';
-            
-            html += `
-              <div class="product-card">
-                <div class="product-info">
-                  <div class="product-name">${product.nome}</div>
-                  <div class="product-details">
-                    <span>Vence em: ${formattedDate}</span>
-                    <span class="product-status ${statusClass}">${product.status || 'Disponível'}</span>
-                    <span>Desconto: ${product.desconto}%</span>
-                  </div>
-                  <div class="pickup-address">
-                    <small>Endereço para retirada: ${pickupAddress}</small>
-                  </div>
-                </div>
-              </div>
-            `;
-          });
-          
-          html += '</div>';
-          productsContainer.innerHTML = html;
-        } else {
-          productsContainer.innerHTML = '<div class="empty-state">Nenhum produto cadastrado. Use o formulário acima para adicionar seus primeiros produtos.</div>';
-        }
-      } else {
-        const errorMessage = await response.text().catch(() => null);
-        console.error('Erro na resposta do servidor:', errorMessage);
-        productsContainer.innerHTML = '<div class="empty-state">Erro ao carregar produtos. Tente novamente mais tarde.</div>';
-      }
-    } catch (error) {
-      console.error('Erro ao carregar produtos:', error);
-      productsContainer.innerHTML = '<div class="empty-state">Erro ao carregar produtos. Verifique sua conexão.</div>';
     }
   }
 
@@ -431,215 +734,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         reader.readAsDataURL(file);
       }
     });
-  }
-
-  // Manipula o formulário de cadastro de produtos
-  const productForm = document.getElementById('productForm');
-  if (productForm) {
-    productForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      // Obter todos os valores do formulário
-      const productName = document.getElementById('productName').value.trim();
-      const productExpiration = document.getElementById('productExpiration').value;
-      const productDiscount = parseFloat(document.getElementById('productDiscount').value) || 0;
-      const productPickup = document.getElementById('productPickup').value.trim();
-      const productImage = document.getElementById('productImage').files[0];
-      const donationCheckbox = document.getElementById('productDonation');
-      const isDonation = donationCheckbox ? donationCheckbox.checked : false;
-
-      // Validações básicas
-      if (!productName) {
-        alert('Por favor, informe o nome do produto.');
-        return;
-      }
-      
-      if (!productExpiration) {
-        alert('Por favor, informe a data de vencimento.');
-        return;
-      }
-      
-      // Data de vencimento deve ser futura
-      const expirationDate = new Date(productExpiration);
-      const today = new Date();
-      if (expirationDate < today) {
-        alert('A data de vencimento não pode ser anterior à data atual.');
-        return;
-      }
-
-      // Mostrar feedback visual de que o produto está sendo cadastrado
-      const submitButton = productForm.querySelector('button[type="submit"]');
-      const originalButtonText = submitButton.textContent;
-      submitButton.textContent = 'Cadastrando...';
-      submitButton.disabled = true;
-      
-      // Obtém o ID mais atual do supermercado
-      const currentSupermercadoId = localStorage.getItem('supermercadoId');
-      
-      // Se não temos o ID do supermercado, vamos tentar obter do servidor
-      if (!currentSupermercadoId) {
-        console.warn('ID do supermercado não encontrado no localStorage. Tentando obter do servidor...');
-        
-        try {
-          const meResponse = await fetch('http://localhost:5207/api/auth/me', {
-            headers: {
-              'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-          });
-          
-          if (meResponse.ok) {
-            const userData = await meResponse.json();
-            console.log("Dados do usuário obtidos:", userData);
-            
-            // Verifica se temos o ID do supermercado na resposta
-            if (userData.supermercadoId) {
-              // Salva no localStorage e usa para o cadastro
-              localStorage.setItem('supermercadoId', userData.supermercadoId);
-              console.log(`Encontrado e armazenado supermercadoId: ${userData.supermercadoId}`);
-              
-              // Continua com este ID
-              const formData = prepareProductFormData(
-                productName, 
-                productExpiration, 
-                productDiscount, 
-                isDonation, 
-                userData.supermercadoId,
-                productPickup,
-                productImage
-              );
-              
-              await submitProductFormData(formData, submitButton, originalButtonText);
-              return;
-            } else {
-              console.error('ID do supermercado não encontrado na resposta do servidor');
-              alert('Não foi possível identificar o supermercado. Por favor, atualize a página e tente novamente.');
-              
-              // Restabelece o estado do botão
-              submitButton.textContent = originalButtonText;
-              submitButton.disabled = false;
-              return;
-            }
-          } else {
-            console.error('Erro ao obter dados do usuário:', meResponse.status);
-          }
-        } catch (error) {
-          console.error('Erro ao tentar obter dados do usuário:', error);
-        }
-        
-        // Se chegou aqui, não conseguiu obter o ID do supermercado
-        alert('Não foi possível identificar o supermercado. Por favor, atualize a página e tente novamente.');
-        
-        // Restabelece o estado do botão
-        submitButton.textContent = originalButtonText;
-        submitButton.disabled = false;
-        return;
-      }
-      
-      console.log(`Cadastrando produto para supermercado ID: ${currentSupermercadoId}`);
-      
-      // Prepara e envia os dados do formulário
-      const formData = prepareProductFormData(
-        productName, 
-        productExpiration, 
-        productDiscount, 
-        isDonation, 
-        currentSupermercadoId,
-        productPickup,
-        productImage
-      );
-      
-      await submitProductFormData(formData, submitButton, originalButtonText);
-    });
-  }
-  
-  // Função para preparar os dados do formulário
-  function prepareProductFormData(name, expiration, discount, isDonation, supermercadoId, pickup, image) {
-      const formData = new FormData();
-      formData.append('nome', name);
-      formData.append('dataVencimento', expiration);
-      formData.append('desconto', isDonation ? 100 : discount);
-      formData.append('status', isDonation ? "doado" : "disponível");
-      formData.append('supermercadoId', supermercadoId);
-      
-      // Só inclui o endereço de retirada se foi fornecido
-      if (pickup) {
-        formData.append('pickupAddress', pickup);
-      }
-      
-      // Adiciona a imagem se foi fornecida
-      if (image) {
-        formData.append('imagem', image);
-      }
-      
-      // Debug para ver o que está sendo enviado
-      console.log("FormData preparado com os seguintes valores:");
-      for (const pair of formData.entries()) {
-        console.log(`${pair[0]}: ${pair[1]}`);
-      }
-      
-      return formData;
-  }
-  
-  // Função para enviar o formulário
-  async function submitProductFormData(formData, submitButton, originalButtonText) {
-    try {
-      // Aviso ao usuário
-      console.log("Enviando dados do produto para o servidor...");
-      
-      const response = await fetch('http://localhost:5207/api/produtos', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: formData
-      });
-
-      console.log(`Status da resposta: ${response.status}`);
-      
-      if (response.ok) {
-        const newProduct = await response.json();
-        console.log('Produto cadastrado:', newProduct);
-        
-        alert('Produto cadastrado com sucesso!');
-        document.getElementById('productForm').reset();
-        
-        // Limpa o preview da imagem
-        const imagePreview = document.getElementById('imagePreview');
-        if (imagePreview) {
-          imagePreview.innerHTML = '';
-          imagePreview.classList.remove('active');
-        }
-        
-        // Recarrega a lista de produtos
-        loadProducts();
-      } else {
-        // Tenta obter detalhes do erro
-        const errorText = await response.text();
-        console.error('Erro na resposta do servidor:', errorText);
-        
-        try {
-          const errorObj = JSON.parse(errorText);
-          if (errorObj.message) {
-            alert(`Falha ao cadastrar o produto: ${errorObj.message}`);
-          } else if (errorObj.errors) {
-            // Se há erros de validação, mostra o primeiro
-            const firstError = Object.values(errorObj.errors)[0][0];
-            alert(`Erro de validação: ${firstError}`);
-          } else {
-            alert(`Falha ao cadastrar o produto: ${response.status} ${response.statusText}`);
-          }
-        } catch {
-          alert(`Falha ao cadastrar o produto: ${response.status} ${response.statusText}`);
-        }
-      }
-    } catch (error) {
-      console.error('Erro ao cadastrar produto:', error);
-      alert('Erro de conexão ao cadastrar produto. Verifique sua conexão de internet.');
-    } finally {
-      // Restaura o estado original do botão
-      submitButton.textContent = originalButtonText;
-      submitButton.disabled = false;
-    }
   }
 
   // Carrega as informações do perfil e os produtos assim que a página for carregada

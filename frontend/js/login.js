@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // Seleciona os elementos principais
   const btnEstabelecimento = document.getElementById("btnEstabelecimento");
   const btnCliente = document.getElementById("btnCliente");
+  const btnAdmin = document.getElementById("btnAdmin");
   const typeSelection = document.getElementById("typeSelection");
   const formSection = document.getElementById("formSection");
 
@@ -23,6 +24,11 @@ document.addEventListener("DOMContentLoaded", function () {
       formId = "loginClienteForm";
       emailId = "emailCliente";
       senhaId = "senhaCliente";
+    } else if (type === "Admin") {
+      title = "Login - Administrador";
+      formId = "loginAdminForm";
+      emailId = "emailAdmin";
+      senhaId = "senhaAdmin";
     }
 
     // Injeta o conteúdo do formulário na seção de login
@@ -76,6 +82,12 @@ document.addEventListener("DOMContentLoaded", function () {
   if (btnCliente) {
     btnCliente.addEventListener("click", function () {
       showLoginForm("Cozinha");
+    });
+  }
+
+  if (btnAdmin) {
+    btnAdmin.addEventListener("click", function () {
+      showLoginForm("Admin");
     });
   }
 
@@ -151,8 +163,10 @@ document.addEventListener("DOMContentLoaded", function () {
           // Redireciona conforme o tipo de usuário
           if (role === "Supermercado") {
             window.location.href = "perfil.html";
-          } else {
+          } else if (role === "Cozinha") {
             window.location.href = "market.html";
+          } else if (role === "Admin") {
+            window.location.href = "admin.html";
           }
         } else {
           if (role === "Cozinha" && !result.user.CozinhaId) {

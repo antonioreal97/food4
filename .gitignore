@@ -2,6 +2,10 @@
 backend/bin/
 backend/obj/
 .vs/
+memory-bank
+node_modules
+.cursorrules
+.vscode
 
 ## Dependências e pacotes
 packages/

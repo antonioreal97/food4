@@ -21,10 +21,10 @@ namespace backend.Controllers
             _environment = environment;
         }
 
-        // POST: api/produtos
-        [HttpPost]
+        // POST: api/produtos/criar
+        [HttpPost("criar")]
         [Authorize(Roles = "Supermercado")]
-        public async Task<IActionResult> CriarProduto([FromForm] Produto produto, IFormFile? imagem)
+        public async Task<IActionResult> CriarProduto([FromForm] ProdutoNovo produto, IFormFile? imagem)
         {
             try
             {
@@ -39,6 +39,11 @@ namespace backend.Controllers
                 if (produto.SupermercadoId <= 0)
                 {
                     return BadRequest(new { message = "ID do supermercado inválido." });
+                }
+    
+                if (string.IsNullOrEmpty(produto.PickupAddress))
+                {
+                    return BadRequest(new { message = "O endereço de retirada é obrigatório." });
                 }
     
                 // Tenta buscar o supermercado pelo ID fornecido
@@ -68,50 +73,73 @@ namespace backend.Controllers
                 {
                     try
                     {
-                        var uploadsFolder = Path.Combine(_environment.ContentRootPath, "frontend", "img", "produtos");
+                        Console.WriteLine($"Processando imagem: {imagem.FileName} ({imagem.Length} bytes)");
+                        
+                        // Verifica o tipo do arquivo
+                        if (!imagem.ContentType.StartsWith("image/"))
+                        {
+                            Console.WriteLine($"Tipo de arquivo inválido: {imagem.ContentType}");
+                            return BadRequest(new { message = "O arquivo enviado não é uma imagem válida." });
+                        }
+    
+                        // Verifica o tamanho do arquivo (máximo 5MB)
+                        if (imagem.Length > 5 * 1024 * 1024)
+                        {
+                            Console.WriteLine($"Arquivo muito grande: {imagem.Length} bytes");
+                            return BadRequest(new { message = "A imagem deve ter no máximo 5MB." });
+                        }
+    
+                        // Converte a imagem para bytes
+                        using (var memoryStream = new MemoryStream())
+                        {
+                            await imagem.CopyToAsync(memoryStream);
+                            produto.Imagem = memoryStream.ToArray();
+                        }
+    
+                        // Obtém o diretório raiz do projeto (onde está o backend)
+                        var projectRoot = Directory.GetParent(_environment.ContentRootPath).FullName;
+                        
+                        // Constrói o caminho para a pasta de imagens no frontend
+                        var uploadsFolder = Path.Combine(projectRoot, "frontend", "img", "produtos");
+                        Console.WriteLine($"Diretório de uploads: {uploadsFolder}");
+    
                         if (!Directory.Exists(uploadsFolder))
+                        {
+                            Console.WriteLine($"Criando diretório de uploads: {uploadsFolder}");
                             Directory.CreateDirectory(uploadsFolder);
+                        }
     
                         var uniqueFileName = Guid.NewGuid().ToString() + "_" + imagem.FileName;
                         var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                        Console.WriteLine($"Salvando imagem em: {filePath}");
     
+                        // Salva a imagem no disco
                         using (var stream = new FileStream(filePath, FileMode.Create))
                         {
                             await imagem.CopyToAsync(stream);
                         }
     
-                        produto.ImagemUrl = $"/img/produtos/{uniqueFileName}";
-                        Console.WriteLine($"Imagem salva em: {produto.ImagemUrl}");
+                        // Define a URL da imagem com o caminho correto para o frontend
+                        produto.ImagemUrl = $"/frontend/img/produtos/{uniqueFileName}";
+                        Console.WriteLine($"URL da imagem definida como: {produto.ImagemUrl}");
                     }
                     catch (Exception ex)
                     {
                         Console.Error.WriteLine($"Erro ao processar imagem: {ex.Message}");
+                        Console.Error.WriteLine($"Stack trace: {ex.StackTrace}");
                         // Continua mesmo sem a imagem
                         produto.ImagemUrl = "/img/produtos/product-placeholder.svg";
+                        produto.Imagem = new byte[0]; // Array vazio para satisfazer a constraint
                     }
                 }
                 else
                 {
-                    // Se não houver imagem enviada, use um placeholder
+                    Console.WriteLine("Nenhuma imagem enviada, usando placeholder");
                     produto.ImagemUrl = "/img/produtos/product-placeholder.svg";
+                    produto.Imagem = new byte[0]; // Array vazio para satisfazer a constraint
                 }
     
-                // Se não houver endereço de retirada específico para o produto, 
-                // usa o endereço do supermercado
-                if (string.IsNullOrEmpty(produto.PickupAddress))
-                {
-                    if (!string.IsNullOrEmpty(supermercado.PickupAddress))
-                    {
-                        produto.PickupAddress = supermercado.PickupAddress;
-                    }
-                    else
-                    {
-                        // Se não houver pickup address, use o endereço do supermercado
-                        produto.PickupAddress = supermercado.Endereco;
-                    }
-                    Console.WriteLine($"Usando endereço de retirada: {produto.PickupAddress}");
-                }
-    
+                Console.WriteLine("Salvando produto no banco de dados...");
                 _context.Produtos.Add(produto);
                 await _context.SaveChangesAsync();
                 
@@ -122,28 +150,28 @@ namespace backend.Controllers
             catch (Exception ex)
             {
                 Console.Error.WriteLine($"Erro ao criar produto: {ex.Message}");
-                Console.Error.WriteLine(ex.StackTrace);
+                Console.Error.WriteLine($"Stack trace: {ex.StackTrace}");
                 return StatusCode(500, new { message = $"Erro ao criar produto: {ex.Message}" });
             }
         }
 
-        // POST: api/produtos/upload-image
-        [HttpPost]
-        public async Task<IActionResult> UploadProductImage(IFormFile imageFile)
+        // POST: api/produtos/upload-imagem
+        [HttpPost("upload-imagem")]
+        public async Task<IActionResult> UploadProductImage([FromForm] IFormFile imagem)
         {
-            if (imageFile == null || imageFile.Length == 0)
+            if (imagem == null || imagem.Length == 0)
             {
                 return BadRequest("Nenhuma imagem foi enviada.");
             }
 
-            var filePath = Path.Combine("wwwroot/images/products", imageFile.FileName);
+            var filePath = Path.Combine("wwwroot/images/products", imagem.FileName);
 
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
-                await imageFile.CopyToAsync(stream);
+                await imagem.CopyToAsync(stream);
             }
 
-            var imageUrl = $"/images/products/{imageFile.FileName}";
+            var imageUrl = $"/images/products/{imagem.FileName}";
 
             // Retorna a URL da imagem para ser salva no banco de dados
             return Ok(new { imageUrl });
@@ -209,34 +237,68 @@ namespace backend.Controllers
             return produto == null ? NotFound("Produto não encontrado.") : Ok(produto);
         }
 
+        // DTO para atualização de produto
+        public class ProdutoUpdateDTO
+        {
+            public int Id { get; set; }
+            public string Nome { get; set; }
+            public DateTime DataVencimento { get; set; }
+            public double Desconto { get; set; }
+            public string Status { get; set; }
+            public string PickupAddress { get; set; }
+            public int SupermercadoId { get; set; }
+            public string? ImagemUrl { get; set; }
+        }
+
         // PUT: api/produtos/{id}
         [HttpPut("{id}")]
         [Authorize(Roles = "Supermercado")]
-        public async Task<IActionResult> AtualizarProduto(int id, [FromBody] Produto produtoAtualizado)
+        public async Task<IActionResult> AtualizarProduto(int id, [FromBody] ProdutoUpdateDTO produtoAtualizado)
         {
+            Console.WriteLine($"Recebendo requisição para atualizar produto ID {id}");
+            Console.WriteLine($"Dados recebidos: Nome={produtoAtualizado.Nome}, Desconto={produtoAtualizado.Desconto}, Status={produtoAtualizado.Status}");
+
             if (id != produtoAtualizado.Id)
                 return BadRequest("ID do produto inconsistente.");
 
-            var produtoExistente = await _context.Produtos.FindAsync(id);
+            var produtoExistente = await _context.Produtos
+                .FirstOrDefaultAsync(p => p.Id == id);
+
             if (produtoExistente == null)
                 return NotFound("Produto não encontrado.");
 
             // Atualiza os campos permitidos
             produtoExistente.Nome = produtoAtualizado.Nome;
             produtoExistente.DataVencimento = produtoAtualizado.DataVencimento;
-            produtoExistente.Desconto = CalcularDesconto(produtoAtualizado.DataVencimento);
-            produtoExistente.Status = produtoExistente.Desconto == 100 ? "doado" : "disponível";
+            produtoExistente.Desconto = produtoAtualizado.Desconto;
+            produtoExistente.Status = produtoAtualizado.Status;
+            produtoExistente.PickupAddress = produtoAtualizado.PickupAddress;
+            produtoExistente.SupermercadoId = produtoAtualizado.SupermercadoId;
+
+            // Mantém a imagem existente se não for fornecida uma nova
+            if (!string.IsNullOrEmpty(produtoAtualizado.ImagemUrl))
+            {
+                produtoExistente.ImagemUrl = produtoAtualizado.ImagemUrl;
+            }
 
             try
             {
+                Console.WriteLine("Salvando alterações no banco de dados...");
                 await _context.SaveChangesAsync();
+                Console.WriteLine($"Produto ID {id} atualizado com sucesso. Novo desconto: {produtoExistente.Desconto}%, Novo status: {produtoExistente.Status}");
             }
-            catch (DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException ex)
             {
+                Console.Error.WriteLine($"Erro de concorrência ao atualizar produto: {ex.Message}");
                 if (!ProdutoExists(id))
                     return NotFound("Produto não encontrado para atualização.");
                 else
                     throw;
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Erro ao atualizar produto: {ex.Message}");
+                return StatusCode(500, new { message = $"Erro ao atualizar produto: {ex.Message}" });
             }
 
             return NoContent();

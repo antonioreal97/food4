@@ -10,56 +10,34 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        CreateHostBuilder(args).Build().Run();
-    }
-
-    public static IHostBuilder CreateHostBuilder(string[] args) =>
-        Host.CreateDefaultBuilder(args)
-            .ConfigureWebHostDefaults(webBuilder =>
-            {
-                webBuilder.UseStartup<Startup>();
-            });
-}
-
-public class Startup
-{
-    public void ConfigureServices(IServiceCollection services)
-    {
-        var builder = WebApplication.CreateBuilder();
+        var builder = WebApplication.CreateBuilder(args);
 
         // Configura o DbContext com SQLite
-        services.AddDbContext<AppDbContext>(options =>
+        builder.Services.AddDbContext<AppDbContext>(options =>
             options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"))
         );
 
-        // Adiciona CORS para permitir requisições do frontend
-        services.AddCors(options =>
+        // Adiciona a política de CORS
+        builder.Services.AddCors(options =>
         {
             options.AddPolicy("AllowFrontend", policy =>
             {
-                policy.WithOrigins(
-                        "http://127.0.0.1:5500", 
-                        "http://localhost:5500", 
-                        "http://127.0.0.1:5501", 
-                        "http://localhost:5501",
-                        "http://127.0.0.1:8080",
-                        "http://localhost:8080"
-                      )
-                      .AllowAnyHeader()
-                      .AllowAnyMethod();
+                policy.AllowAnyOrigin()
+                      .AllowAnyMethod()
+                      .AllowAnyHeader();
             });
         });
 
         // Registra os serviços da aplicação
-        services.AddScoped<UserService>();
-        services.AddScoped<backend.Authentication.JwtAuthService>();
+        builder.Services.AddScoped<UserService>();
+        builder.Services.AddScoped<backend.Authentication.JwtAuthService>();
 
         // Configuração do JWT
         var jwtSettings = builder.Configuration.GetSection("JwtSettings");
         var key = Encoding.ASCII.GetBytes(jwtSettings.GetValue<string>("SecretKey"));
 
         // Adiciona a autenticação JWT
-        services.AddAuthentication(options =>
+        builder.Services.AddAuthentication(options =>
         {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
             options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -79,16 +57,16 @@ public class Startup
         });
 
         // Autorização para os endpoints
-        services.AddAuthorization(options =>
+        builder.Services.AddAuthorization(options =>
         {
             options.AddPolicy("SupermercadoOnly", policy => policy.RequireRole("Supermercado"));
             options.AddPolicy("CozinhaOnly", policy => policy.RequireRole("Cozinha"));
         });
 
         // Registra os controllers e o Swagger
-        services.AddControllers();
-        services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen(c =>
+        builder.Services.AddControllers();
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen(c =>
         {
             // Configuração do Swagger para exibir o JWT
             c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
@@ -112,16 +90,15 @@ public class Startup
                             Id = "Bearer"
                         }
                     },
-                    Array.Empty<string>()
+                    new string[] {}
                 }
             });
         });
-    }
 
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-    {
-        // Configura o middleware
-        if (env.IsDevelopment())
+        var app = builder.Build();
+
+        // Configura o pipeline de requisição HTTP.
+        if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
             app.UseSwaggerUI();
@@ -130,10 +107,9 @@ public class Startup
         app.UseHttpsRedirection();
         app.UseStaticFiles();
 
-        // Ativa o CORS antes dos middlewares de autenticação e autorização
+        // Usa o CORS antes do UseAuthorization
         app.UseCors("AllowFrontend");
 
-        // Adiciona o middleware de roteamento antes do middleware de endpoints
         app.UseRouting();
 
         app.UseAuthentication();
@@ -143,5 +119,7 @@ public class Startup
         {
             endpoints.MapControllers();
         });
+
+        app.Run();
     }
 }
