@@ -1,0 +1,331 @@
+/* cadastro.css - Estilos específicos para a página de cadastro */
+
+/* Container principal */
+.cadastro-main {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 4rem 0;
+    background: linear-gradient(135deg, rgba(76,175,80,0.08) 0%, rgba(45,112,48,0.08) 100%);
+  }
+  
+  .auth-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+  }
+  
+  /* Card de autenticação */
+  .auth-card {
+    background: var(--white);
+    padding: 3rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    max-width: 800px;
+    margin: 0 auto;
+    transition: all 0.3s ease;
+  }
+  
+  .auth-title {
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 1rem;
+    color: var(--dark-color);
+  }
+  
+  .auth-subtitle {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #666;
+    font-size: 1.1rem;
+  }
+  
+  /* Grid de seleção de tipo de usuário */
+  .user-type-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+  
+  .user-type-card {
+    padding: 2rem;
+    border: 2px solid var(--light-color);
+    border-radius: 15px;
+    text-align: center;
+    transition: all 0.3s ease;
+    background: var(--white);
+  }
+  
+  .user-type-card:hover {
+    border-color: var(--primary-color);
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(76,175,80,0.15);
+  }
+  
+  .type-icon {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    transition: transform 0.3s ease;
+  }
+  
+  .user-type-card:hover .type-icon {
+    transform: scale(1.1);
+  }
+  
+  .type-description {
+    color: #666;
+    margin: 1rem 0;
+    font-size: 0.95rem;
+  }
+  
+  .type-btn {
+    width: 100%;
+    padding: 1rem;
+    background-color: var(--primary-color);
+    color: var(--white);
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .type-btn:hover {
+    background-color: var(--secondary-color);
+  }
+  
+  /* Formulário de cadastro */
+  .auth-form {
+    margin-top: 2rem;
+  }
+  
+  .form-container {
+    padding: 2rem;
+    animation: fadeIn 0.3s ease;
+  }
+  
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: var(--dark-color);
+    font-size: 0.95rem;
+  }
+  
+  .input-with-icon {
+    position: relative;
+  }
+  
+  .input-with-icon i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #666;
+    font-size: 1rem;
+  }
+  
+  .input-with-icon input {
+    width: 100%;
+    padding: 0.8rem 1rem 0.8rem 40px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+  }
+  
+  .input-with-icon input:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(76,175,80,0.2);
+  }
+  
+  /* Campos dinâmicos */
+  .supermarket-fields,
+  .kitchen-fields {
+    display: none;
+    animation: fadeIn 0.3s ease;
+  }
+  
+  .supermarket-fields.show,
+  .kitchen-fields.show {
+    display: block;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Termos e condições */
+  .terms {
+    display: flex;
+    align-items: center;
+    margin: 1.5rem 0;
+  }
+  
+  .terms label {
+    margin-left: 0.5rem;
+    font-size: 0.95rem;
+    color: #666;
+  }
+  
+  .terms a {
+    color: var(--primary-color);
+    text-decoration: none;
+  }
+  
+  .terms a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Validação de senha */
+  .password-strength {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    display: none;
+  }
+  
+  .password-strength.weak {
+    color: #e74c3c;
+  }
+  
+  .password-strength.medium {
+    color: #f1c40f;
+  }
+  
+  .password-strength.strong {
+    color: #2ecc71;
+  }
+  
+  /* Botões */
+  .voltar-btn {
+    background-color: #666;
+    color: white;
+    padding: 0.8rem 1.5rem;
+    border-radius: 5px;
+    margin-top: 1rem;
+    transition: all 0.3s ease;
+  }
+  
+  .voltar-btn:hover {
+    background-color: #555;
+  }
+  
+  .auth-submit {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1.1rem;
+    margin-top: 1rem;
+    background-color: var(--primary-color);
+    color: var(--white);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .auth-submit:hover {
+    background-color: var(--secondary-color);
+  }
+  
+  /* Alertas */
+  .alert {
+    padding: 1rem;
+    margin: 1rem;
+    border-radius: 8px;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    animation: slideDown 0.3s ease-out;
+  }
+  
+  .alert.success {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+  }
+  
+  .alert.error {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+  }
+  
+  @keyframes slideDown {
+    from {
+      transform: translateY(-100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  
+  /* Responsividade */
+  @media (max-width: 768px) {
+    .auth-card {
+      padding: 2rem 1.5rem;
+    }
+    
+    .auth-title {
+      font-size: 2rem;
+    }
+    
+    .user-type-grid {
+      grid-template-columns: 1fr;
+    }
+  
+    .form-row {
+      grid-template-columns: 1fr !important;
+    }
+  
+    .cadastro-main {
+      padding: 2rem 0;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .auth-card {
+      padding: 1.5rem;
+    }
+    
+    .auth-title {
+      font-size: 1.8rem;
+    }
+    
+    .type-btn {
+      font-size: 0.9rem;
+    }
+  
+    .alert {
+      width: 90%;
+      right: 5%;
+    }
+  }
+  
+  /* Sobrescritas específicas */
+  .cadastro-main .type-description {
+    min-height: auto;
+  }
+  
+  .cadastro-main .auth-subtitle {
+    margin-bottom: 3rem;
+  }
+  
+  .hidden {
+    display: none !important;
+  }

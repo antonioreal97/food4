@@ -1,0 +1,206 @@
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Administrativo - Food4LL</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="~/css/styles.css">
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav class="col-md-3 col-lg-2 d-md-block bg-dark sidebar collapse">
+                <div class="position-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active text-white" href="#" id="usuarios-tab">
+                                <i class="bi bi-people"></i> Monitorar Usuários
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="#" id="transacoes-tab">
+                                <i class="bi bi-cash"></i> Monitorar Transações
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="#" id="feedbacks-tab">
+                                <i class="bi bi-star"></i> Feedbacks
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="#" id="relatorios-tab">
+                                <i class="bi bi-file-earmark-text"></i> Gerar Relatórios
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <!-- Conteúdo Principal -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <!-- Monitorar Usuários -->
+                <div class="tab-content" id="usuarios-content">
+                    <h2 class="mt-4">Monitorar Usuários</h2>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table" id="usuarios-table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Nome</th>
+                                            <th>Email</th>
+                                            <th>Tipo</th>
+                                            <th>Status</th>
+                                            <th>Data Cadastro</th>
+                                            <th>Último Acesso</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Monitorar Transações -->
+                <div class="tab-content d-none" id="transacoes-content">
+                    <h2 class="mt-4">Monitorar Transações</h2>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table" id="transacoes-table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Data</th>
+                                            <th>Tipo</th>
+                                            <th>Status</th>
+                                            <th>Valor</th>
+                                            <th>Detalhes</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-4">
+                                    <div class="card bg-primary text-white">
+                                        <div class="card-body">
+                                            <h5>Total de Transações</h5>
+                                            <h3 id="total-transacoes">0</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card bg-success text-white">
+                                        <div class="card-body">
+                                            <h5>Transações Concluídas</h5>
+                                            <h3 id="transacoes-concluidas">0</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card bg-warning text-white">
+                                        <div class="card-body">
+                                            <h5>Transações Pendentes</h5>
+                                            <h3 id="transacoes-pendentes">0</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Feedbacks -->
+                <div class="tab-content d-none" id="feedbacks-content">
+                    <h2 class="mt-4">Feedbacks das Doações</h2>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table" id="feedbacks-table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Data</th>
+                                            <th>Doação</th>
+                                            <th>Avaliação</th>
+                                            <th>Feedback</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-4">
+                                    <div class="card bg-info text-white">
+                                        <div class="card-body">
+                                            <h5>Média de Avaliações</h5>
+                                            <h3 id="media-avaliacoes">0.0</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card bg-success text-white">
+                                        <div class="card-body">
+                                            <h5>Total de Feedbacks</h5>
+                                            <h3 id="total-feedbacks">0</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card bg-warning text-white">
+                                        <div class="card-body">
+                                            <h5>Feedbacks Pendentes</h5>
+                                            <h3 id="feedbacks-pendentes">0</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Gerar Relatórios -->
+                <div class="tab-content d-none" id="relatorios-content">
+                    <h2 class="mt-4">Gerar Relatórios</h2>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="card mb-3">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Relatório de Doações</h5>
+                                            <p class="card-text">Gera relatório detalhado de todas as doações realizadas.</p>
+                                            <button class="btn btn-primary" id="gerar-relatorio-doacoes">
+                                                <i class="bi bi-download"></i> Gerar Relatório
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card mb-3">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Relatório de Usuários</h5>
+                                            <p class="card-text">Gera relatório com informações dos usuários cadastrados.</p>
+                                            <button class="btn btn-primary" id="gerar-relatorio-usuarios">
+                                                <i class="bi bi-download"></i> Gerar Relatório
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/admin.js"></script>
+</body>
+</html> 

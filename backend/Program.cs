@@ -64,7 +64,7 @@ public class Program
         });
 
         // Registra os controllers e o Swagger
-        builder.Services.AddControllers();
+        builder.Services.AddControllersWithViews();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(c =>
         {
@@ -117,7 +117,9 @@ public class Program
 
         app.UseEndpoints(endpoints =>
         {
-            endpoints.MapControllers();
+            endpoints.MapControllerRoute(
+                name: "default",
+                pattern: "{controller=Home}/{action=Index}/{id?}");
         });
 
         app.Run();
