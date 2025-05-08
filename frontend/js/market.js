@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Função para carregar os produtos
   function loadProducts(supermarketId, container) {
-      fetch(`http://localhost:5207/api/produtos/supermercado/${supermarketId}`)
+      fetch(`https://localhost:7223/api/produtos/supermercado/${supermarketId}`)
           .then(response => response.json())
           .then(products => {
               const availableItemsCount = products.length;
@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Carrega todos os supermercados
   function loadSupermarkets() {
-      fetch('http://localhost:5207/api/supermercados')
+      fetch('https://localhost:7223/api/supermercados')
           .then(response => response.json())
           .then(supermarkets => {
               supermarketsContainer.innerHTML = '';

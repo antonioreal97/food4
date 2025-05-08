@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Função para carregar os itens do carrinho
     function loadCartItems() {
-        fetch('http://localhost:5207/api/carrinho')
+        fetch('https://localhost:7223/api/carrinho')
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);

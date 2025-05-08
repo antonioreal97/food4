@@ -128,7 +128,7 @@ namespace backend.Controllers
         }
 
         // POST: api/produtos/upload-image
-        [HttpPost]
+        [HttpPost("upload-image")]
         public async Task<IActionResult> UploadProductImage(IFormFile imageFile)
         {
             if (imageFile == null || imageFile.Length == 0)

@@ -21,7 +21,7 @@ namespace backend.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<ItemCarrinho>> ObterItensCarrinho()
         {
-            var itensCarrinho = _context.ItensCarrinho.ToList();
+            var itensCarrinho = _context.ItensCarrinho?.ToList();
             return Ok(itensCarrinho);
         }
     }

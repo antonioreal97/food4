@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (!userId) {
     try {
       console.log('Tentando obter informações do usuário do servidor...');
-      const response = await fetch('http://localhost:5207/api/auth/me', {
+      const response = await fetch('https://localhost:7223/api/auth/me', {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       // para garantir que temos o ID do supermercado mais recente
       try {
         console.log("Buscando informações atualizadas do usuário via /api/auth/me");
-        const userResponse = await fetch('http://localhost:5207/api/auth/me', {
+        const userResponse = await fetch('https://localhost:7223/api/auth/me', {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
@@ -155,11 +155,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       let url;
       if (supermercadoId) {
         // Se temos um ID de supermercado, usamos diretamente
-        url = `http://localhost:5207/api/supermercados/${supermercadoId}`;
+        url = `https://localhost:7223/api/supermercados/${supermercadoId}`;
         console.log(`Buscando pelo ID do supermercado: ${supermercadoId}`);
       } else {
         // Se só temos ID de usuário, usamos o endpoint específico
-        url = `http://localhost:5207/api/supermercados/usuario/${userId}`;
+        url = `https://localhost:7223/api/supermercados/usuario/${userId}`;
         console.log(`Buscando pelo ID do usuário: ${userId}`);
       }
       
@@ -199,7 +199,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             
             try {
               // Chamamos novamente o endpoint que agora deve criar um novo supermercado
-              const createResponse = await fetch(`http://localhost:5207/api/supermercados/usuario/${userId}`, {
+              const createResponse = await fetch(`https://localhost:7223/api/supermercados/usuario/${userId}`, {
                 headers: {
                   'Authorization': `Bearer ${localStorage.getItem('token')}`
                 }
@@ -285,7 +285,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       const idToUse = currentSupermercadoId || supermercadoIdentificador;
       console.log(`Buscando produtos para o supermercado ID: ${idToUse}`);
       
-      const response = await fetch(`http://localhost:5207/api/produtos/supermercado/${idToUse}`, {
+      const response = await fetch(`https://localhost:7223/api/produtos/supermercado/${idToUse}`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
@@ -379,7 +379,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         console.log(`Atualizando endereço de retirada para supermercado ID: ${currentSupermercadoId}`);
         
-        const response = await fetch(`http://localhost:5207/api/supermercados/${currentSupermercadoId}`, {
+        const response = await fetch(`https://localhost:7223/api/supermercados/${currentSupermercadoId}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -481,7 +481,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.warn('ID do supermercado não encontrado no localStorage. Tentando obter do servidor...');
         
         try {
-          const meResponse = await fetch('http://localhost:5207/api/auth/me', {
+          const meResponse = await fetch('https://localhost:7223/api/auth/me', {
             headers: {
               'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
@@ -586,7 +586,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       // Aviso ao usuário
       console.log("Enviando dados do produto para o servidor...");
       
-      const response = await fetch('http://localhost:5207/api/produtos', {
+      const response = await fetch('https://localhost:7223/api/produtos', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`

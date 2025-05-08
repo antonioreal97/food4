@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const listContainer = document.getElementById('supermercados-list');
 
   try {
-    const response = await fetch('http://localhost:5207/api/supermercados');
+    const response = await fetch('https://localhost:7223/api/supermercados');
     if (!response.ok) {
       throw new Error('Erro na resposta da rede.');
     }

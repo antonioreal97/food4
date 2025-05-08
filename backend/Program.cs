@@ -43,7 +43,9 @@ public class Startup
                         "http://127.0.0.1:5501", 
                         "http://localhost:5501",
                         "http://127.0.0.1:8080",
-                        "http://localhost:8080"
+                        "http://localhost:8080",
+                        "https://localhost:5500",
+                        "https://127.0.0.1:5500"
                       )
                       .AllowAnyHeader()
                       .AllowAnyMethod();
@@ -133,7 +135,6 @@ public class Startup
         // Ativa o CORS antes dos middlewares de autenticação e autorização
         app.UseCors("AllowFrontend");
 
-        // Adiciona o middleware de roteamento antes do middleware de endpoints
         app.UseRouting();
 
         app.UseAuthentication();
@@ -143,5 +144,11 @@ public class Startup
         {
             endpoints.MapControllers();
         });
+
+        using (var scope = app.ApplicationServices.CreateScope())
+        {
+            var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            dbContext.Database.Migrate();
+        }
     }
 }

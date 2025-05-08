@@ -180,7 +180,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function handleUserRegistration(userData, callback) {
         console.log("Registrando usuário:", userData);
         
-        const serverUrl = 'http://localhost:5207/api/auth/register';
+        const serverUrl = 'https://localhost:7223/api/auth/register';
         console.log(`Tentando conectar a: ${serverUrl}`);
 
         // Log do corpo da solicitação
@@ -267,7 +267,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Mensagem mais amigável para o erro de Failed to fetch
             if (error.message === 'Failed to fetch') {
-                alert('Não foi possível conectar ao servidor. Verifique se o servidor backend está em execução em http://localhost:5207');
+                alert('Não foi possível conectar ao servidor. Verifique se o servidor backend está em execução em https://localhost:7223');
             } else {
                 alert('Erro no registro de usuário: ' + error.message);
             }
@@ -290,7 +290,7 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log("Corpo da requisição JSON:", JSON.stringify(entityData));
         console.log("Token para autorização:", userData.Token);
         
-        fetch(`http://localhost:5207/api/${endpoint}`, {
+        fetch(`https://localhost:7223/api/${endpoint}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
